@@ -1,4 +1,8 @@
 defmodule Board do
+  def new do
+    Enum.reduce(0..8, %{}, fn pos, board -> Map.put(board, pos, "") end)
+  end
+
   def hasWon?(board) do
     win = [
       [0, 1, 2],
