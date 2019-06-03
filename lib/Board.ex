@@ -3,6 +3,13 @@ defmodule Board do
     Enum.reduce(0..8, %{}, fn pos, board -> Map.put(board, pos, "") end)
   end
 
+  def update(board, pos, player) do
+    case Map.fetch(board, pos) do
+      {:ok, square} when square == "" -> Map.put(board, pos, player)
+      _ -> board
+    end
+  end
+
   def hasWon?(board) do
     win = [
       [0, 1, 2],
