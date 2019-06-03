@@ -11,10 +11,7 @@ defmodule BoardTest do
   end
 
   test "update/3 adds a symbol to the board" do
-    board = %{
-      0 => ""
-    }
-
+    board = Board.new()
     pos = 0
     player = "X"
     result = Board.update(board, pos, player)
@@ -22,123 +19,133 @@ defmodule BoardTest do
   end
 
   test "update/3 does not overwrite occupied squares" do
-    board = %{
-      0 => "O"
-    }
-
+    board = Board.new()
     pos = 0
-    player = "X"
-    result = Board.update(board, pos, player)
-    assert Map.fetch(result, 0) == {:ok, "O"}
+    first_player = "X"
+    first_move = Board.update(board, pos, first_player)
+    second_player = "O"
+    second_move = Board.update(first_move, pos, second_player)
+    assert Map.fetch(second_move, 0) == {:ok, "X"}
   end
 
   test "update/3 does not change the board if the requested update position is out of bounds" do
-    board = %{
-      0 => ""
-    }
-
-    pos = 1
+    board = Board.new()
+    pos = 10
     player = "X"
     result = Board.update(board, pos, player)
-    assert result == %{0 => ""}
+    assert result == Board.new()
   end
 
   test "hasWon returns false if board is empty" do
-    board = %{
-      0 => "",
-      1 => "",
-      2 => ""
-    }
-
+    board = Board.new()
     assert Board.hasWon?(board) == false
   end
 
   test "hasWon returns true if player has won with top horizontal line" do
-    board = %{
-      0 => "X",
-      1 => "X",
-      2 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(0, player)
+      |> Board.update(1, player)
+      |> Board.update(2, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns false if player has not won with top horizontal line" do
-    board = %{
-      0 => "X",
-      1 => "O",
-      2 => "X"
-    }
+    first_player = "X"
+    second_player = "O"
+
+    board =
+      Board.new()
+      |> Board.update(0, first_player)
+      |> Board.update(1, second_player)
+      |> Board.update(2, first_player)
 
     assert Board.hasWon?(board) == false
   end
 
   test "hasWon returns true if player has won with middle horizontal line" do
-    board = %{
-      3 => "X",
-      4 => "X",
-      5 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(3, player)
+      |> Board.update(4, player)
+      |> Board.update(5, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with bottom horizontal line" do
-    board = %{
-      6 => "X",
-      7 => "X",
-      8 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(6, player)
+      |> Board.update(7, player)
+      |> Board.update(8, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with left vertical line" do
-    board = %{
-      0 => "X",
-      3 => "X",
-      6 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(0, player)
+      |> Board.update(3, player)
+      |> Board.update(6, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with middle vertical line" do
-    board = %{
-      1 => "X",
-      4 => "X",
-      7 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(1, player)
+      |> Board.update(4, player)
+      |> Board.update(7, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with right vertical line" do
-    board = %{
-      2 => "X",
-      5 => "X",
-      8 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(2, player)
+      |> Board.update(5, player)
+      |> Board.update(8, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with left diagonal line" do
-    board = %{
-      0 => "X",
-      4 => "X",
-      8 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(0, player)
+      |> Board.update(4, player)
+      |> Board.update(8, player)
 
     assert Board.hasWon?(board) == true
   end
 
   test "hasWon returns true if player has won with right diagonal line" do
-    board = %{
-      2 => "X",
-      4 => "X",
-      6 => "X"
-    }
+    player = "X"
+
+    board =
+      Board.new()
+      |> Board.update(2, player)
+      |> Board.update(4, player)
+      |> Board.update(6, player)
 
     assert Board.hasWon?(board) == true
   end
