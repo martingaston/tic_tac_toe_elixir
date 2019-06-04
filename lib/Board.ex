@@ -1,15 +1,28 @@
 defmodule Board do
+  @moduledoc """
+  Contains functions to determine board management - creation, updating and determining if a player has filled a row, column or diagonal
+  """
+
+  @doc """
+  Return an empty board
+  """
   def new do
-    Enum.reduce(0..8, %{}, fn pos, board -> Map.put(board, pos, "") end)
+    Enum.reduce(0..8, %{}, &Map.put(&2, &1, ""))
   end
 
-  def update(board, pos, player) do
+  @doc """
+  Update an existing board in the specified position with a specified mark. Does not overwrite existing marks.
+  """
+  def update(board, pos, mark) do
     case Map.fetch(board, pos) do
-      {:ok, square} when square == "" -> Map.put(board, pos, player)
+      {:ok, square} when square == "" -> Map.put(board, pos, mark)
       _ -> board
     end
   end
 
+  @doc """
+  Recieves a board state and determines if any winning combinations exist
+  """
   def hasWon?(board) do
     win = [
       [0, 1, 2],
@@ -27,7 +40,7 @@ defmodule Board do
         Map.take(board, x)
         |> Map.values()
 
-      length(values) == 3 && hd(values) != "" && Enum.all?(values, fn x -> x == hd(values) end)
+      Enum.count(values) == 3 && hd(values) != "" && Enum.all?(values, &(&1 == hd(values)))
     end)
   end
 end
