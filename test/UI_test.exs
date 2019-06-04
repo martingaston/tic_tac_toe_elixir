@@ -1,4 +1,4 @@
-defmodule DisplayTest do
+defmodule UITest do
   use ExUnit.Case
 
   # TODO replace with Board.new() API when implemented
@@ -14,9 +14,9 @@ defmodule DisplayTest do
     8 => "O"
   }
 
-  test "Display.print/2 should output current game state" do
+  test "UI.show_board/2 should output current game state" do
     {:ok, io} = StringIO.open("")
-    Display.print(@board, io)
+    UI.show_board(@board, io)
 
     assert StringIO.flush(io) ==
              "+-----------+\n| X | O | O |\n+-----------+\n| O | X | X |\n+-----------+\n| X | X | O |\n+-----------+\n"
