@@ -2,10 +2,6 @@ defmodule BoardTest do
   use ExUnit.Case
   doctest Board
 
-  test "new/0 returns a board of length 9" do
-    assert Enum.count(Board.new()) == 9
-  end
-
   test "new/0 returns an empty board" do
     assert Enum.all?(Board.new(), fn {_k, occupant} -> occupant == "" end)
   end
