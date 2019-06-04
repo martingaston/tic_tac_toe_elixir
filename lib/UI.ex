@@ -1,5 +1,5 @@
 defmodule UI do
-  def show_board(state, io \\ :stdio) do
+  def print_board(state, io \\ :stdio) do
     print_header(io)
     print_row(state, 0..2, io)
     print_header(io)
