@@ -16,7 +16,7 @@ defmodule UITest do
 
   test "UI.show_board/2 should output current game state" do
     {:ok, io} = StringIO.open("")
-    UI.show_board(@board, io)
+    UI.print_board(@board, io)
 
     assert StringIO.flush(io) ==
              "+-----------+\n| X | O | O |\n+-----------+\n| O | X | X |\n+-----------+\n| X | X | O |\n+-----------+\n"
