@@ -9,6 +9,29 @@ defmodule UI do
     print_header(io)
   end
 
+  def print_winner(mark, io \\ :stdio) do
+    out("Player #{mark} wins!", io)
+  end
+
+  def print_turn(mark, io \\ :stdio) do
+    out("Player #{mark}'s turn:", io)
+  end
+
+  def print_draw(io \\ :stdio) do
+    out("It's a draw!", io)
+  end
+
+  def print_intro(io \\ :stdio) do
+    out(
+      "TIC TAC TOE\nThe classic game of noughts and crosses!\nTurn friends into enemies as 2 players take turns marking spaces in a grid.\nWin short-lived glory by succeeding in placing a complete line in any horizontal, vertical or diagonal direction.\n",
+      io
+    )
+  end
+
+  def print_instructions(io \\ :stdio) do
+    out("Input numbers between 1-9 on alternative turns to place your mark in the 3x3 grid.", io)
+  end
+
   defp print_header(io) do
     out("+-----------+\n", io)
   end
