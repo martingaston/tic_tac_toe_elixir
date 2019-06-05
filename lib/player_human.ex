@@ -3,10 +3,11 @@ defmodule PlayerHuman do
   @last_square 8
   def move(board, message, args, io \\ :stdio) do
     args.io.output(io, message)
-    position = args.io.get_position(io)
 
-    case valid_move?(position, board, args) do
-      {:ok, _} -> position
+    args.io.get_position(io)
+    |> valid_move?(board, args)
+    |> case do
+      {:ok, position} -> position
       {:error, message} -> move(board, args.ui.message(message), args)
     end
   end
