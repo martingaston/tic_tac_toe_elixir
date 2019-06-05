@@ -3,16 +3,14 @@ defmodule PlayerHumanTest do
   @board Board.new()
   @args %{board: Board, io: TicTacToe.Io, ui: UI, mark: "X"}
 
-  test "move/4 can get a valid move from the user and return a new board state" do
+  test "move/4 can get a valid move from the user and return the zero-indexed integer" do
     {:ok, io} = StringIO.open("1")
-    %{0 => mark} = PlayerHuman.move(@board, "", @args, io)
-    assert mark == "X"
+    assert PlayerHuman.move(@board, "", @args, io) == 0
   end
 
   test "move/4 will prompt again if user does not submit valid move" do
     {:ok, io} = StringIO.open("cat\n1")
-    %{0 => mark} = PlayerHuman.move(@board, "", @args, io)
-    assert mark == "X"
+    assert PlayerHuman.move(@board, "", @args, io) == 0
   end
 
   test "valid_move?/3 returns :ok when placing valid move on an empty board" do

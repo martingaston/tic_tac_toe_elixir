@@ -4,7 +4,7 @@ defmodule PlayerHuman do
     position = args.io.get_position(io)
 
     case valid_move?(position, board, args) do
-      {:ok, _move} -> args.board.update(board, position, args.mark)
+      {:ok, _} -> position
       {:error, message} -> move(board, args.ui.message(message), args)
     end
   end
