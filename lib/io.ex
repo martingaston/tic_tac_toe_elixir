@@ -1,8 +1,8 @@
 defmodule TicTacToe.Io do
   def get_position(io \\ :stdio) do
-    input = input(io)
-
-    case Integer.parse(input) do
+    input(io)
+    |> Integer.parse()
+    |> case do
       {int, _} -> computerise(int)
       _ -> get_position(io)
     end
