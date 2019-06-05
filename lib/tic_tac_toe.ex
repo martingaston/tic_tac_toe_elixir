@@ -3,16 +3,8 @@ defmodule TicTacToe do
   Documentation for TicTacToe.
   """
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> TicTacToe.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def start(%{board: board}) do
+    game_board = board.new()
+    game_board
   end
 end
