@@ -6,6 +6,10 @@ defmodule TicTacToe.CLI do
   """
 
   def main(_) do
-    IO.puts("Hello World!")
+    args = %{
+      board: Board
+    }
+
+    TicTacToe.start(args)
   end
 end
