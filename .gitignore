@@ -25,3 +25,6 @@ tic_tac_toe_elixir-*.tar
 # VIM .swp files
 *.swp
 
+# Compiled escript
+tic_tac_toe
+
