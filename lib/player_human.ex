@@ -1,4 +1,6 @@
 defmodule PlayerHuman do
+  @first_square 0
+  @last_square 8
   def move(board, message, args, io \\ :stdio) do
     args.io.output(io, message)
     position = args.io.get_position(io)
@@ -13,7 +15,8 @@ defmodule PlayerHuman do
     {:error, :nan}
   end
 
-  def valid_move?(position, _board, _args) when position < 0 or position > 8 do
+  def valid_move?(position, _board, _args)
+      when @first_square or position > @last_square do
     {:error, :out_of_bounds}
   end
 
