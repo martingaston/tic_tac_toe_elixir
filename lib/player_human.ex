@@ -1,4 +1,11 @@
 defmodule PlayerHuman do
+  def move(position, board, args) do
+    case valid_move?(position, board, args) do
+      {:ok, move} -> move
+      {:error, :message} -> :message
+    end
+  end
+
   def valid_move?(position, _board, _args) when not is_integer(position) do
     {:error, :nan}
   end
