@@ -15,4 +15,8 @@ defmodule TicTacToe.Io do
   defp input(io) do
     IO.gets(io, "")
   end
+
+  def output(io, contents) do
+    IO.write(io, contents)
+  end
 end

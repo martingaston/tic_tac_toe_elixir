@@ -1,8 +1,11 @@
 defmodule PlayerHuman do
-  def move(position, board, args) do
+  def move(board, message, args, io \\ :stdio) do
+    args.io.output(io, message)
+    position = args.io.get_position(io)
+
     case valid_move?(position, board, args) do
-      {:ok, move} -> move
-      {:error, :message} -> :message
+      {:ok, _move} -> args.board.update(board, position, args.mark)
+      {:error, message} -> move(board, args.ui.message(message), args)
     end
   end
 

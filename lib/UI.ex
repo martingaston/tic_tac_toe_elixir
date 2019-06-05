@@ -9,6 +9,15 @@ defmodule UI do
     print_header(io)
   end
 
+  def message(key) do
+    case key do
+      :nan -> "Sorry, that's not a valid number. Please enter a whole number."
+      :out_of_bounds -> "Sorry, that number isn't available on the board."
+      :occupied -> "Sorry, that square has been taken. Please enter an unoccupied square."
+      _ -> "Uh-oh, something went wrong!"
+    end
+  end
+
   def print_winner(mark, io \\ :stdio) do
     out("Player #{mark} wins!", io)
   end
