@@ -16,7 +16,7 @@ defmodule PlayerHuman do
   end
 
   def valid_move?(position, _board, _args)
-      when @first_square or position > @last_square do
+      when position < @first_square or position > @last_square do
     {:error, :out_of_bounds}
   end
 
