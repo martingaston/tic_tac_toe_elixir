@@ -21,6 +21,14 @@ defmodule Board do
   end
 
   @doc """
+  Recieves a board and a position and returns a bool indicating if the requested position is available
+  """
+  def available?(board, position) do
+    {:ok, mark} = Map.fetch(board, position)
+    mark == ""
+  end
+
+  @doc """
   Recieves a board state and determines if any winning combinations exist
   """
   def hasWon?(board) do
