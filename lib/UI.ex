@@ -32,7 +32,7 @@ defmodule UI do
   end
 
   def print_winner(mark, io \\ :stdio) do
-    out("Player #{mark} wins!", io)
+    out("Player #{mark} wins!\n", io)
   end
 
   def print_turn(mark, io \\ :stdio) do
@@ -40,7 +40,7 @@ defmodule UI do
   end
 
   def print_draw(io \\ :stdio) do
-    out("It's a draw!", io)
+    out("It's a draw!\n", io)
   end
 
   def print_instructions(io \\ :stdio) do
@@ -60,7 +60,7 @@ defmodule UI do
     square =
       Map.get(state, position)
       |> case do
-        "" -> humanise(position)
+        "" -> humanise(position) |> fade()
         mark -> mark
       end
 
@@ -69,6 +69,11 @@ defmodule UI do
 
   defp out(contents, io) do
     IO.write(io, contents)
+  end
+
+  defp fade(text) do
+    grey = 242
+    IO.ANSI.color(grey) <> text <> IO.ANSI.reset()
   end
 
   defp humanise(position) do
