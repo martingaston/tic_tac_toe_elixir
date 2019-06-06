@@ -28,6 +28,14 @@ defmodule Board do
     mark == ""
   end
 
+  def status(board) do
+    cond do
+      moves?(board) == :zero -> :drawn
+      hasWon?(board) -> :won
+      true -> :active
+    end
+  end
+
   def moves?(board) do
     board
     |> Enum.filter(fn {_, occupant} -> occupant == "" end)

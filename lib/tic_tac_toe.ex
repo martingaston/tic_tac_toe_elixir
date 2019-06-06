@@ -12,7 +12,7 @@ defmodule TicTacToe do
         ui: ui,
         io: io
       }) do
-    game_board = new_board(board)
+    game_board = board.new()
     intro(ui, io)
 
     tick(%{
@@ -43,43 +43,36 @@ defmodule TicTacToe do
 
     updated_board = board.update(game_board, pos, mark)
 
-    board.hasWon?(updated_board)
+    board.status(updated_board)
     |> case do
-      true ->
-        game_won(%{game_board: updated_board, ui: ui, mark: mark})
+      :won ->
+        game_over(:won, %{game_board: updated_board, ui: ui, mark: mark})
 
-      false ->
-        case board.moves?(updated_board) do
-          :zero ->
-            game_drawn(%{game_board: updated_board, ui: ui})
+      :drawn ->
+        game_over(:drawn, %{game_board: updated_board, ui: ui})
 
-          {:ok, _, _} ->
-            tick(%{
-              current_player: swap_player(mark, player_cross, player_nought),
-              player_cross: player_cross,
-              player_nought: player_nought,
-              mark: swap_mark(mark),
-              board: board,
-              game_board: updated_board,
-              io: io,
-              ui: ui
-            })
-        end
+      :active ->
+        tick(%{
+          current_player: swap_player(mark, player_cross, player_nought),
+          player_cross: player_cross,
+          player_nought: player_nought,
+          mark: swap_mark(mark),
+          board: board,
+          game_board: updated_board,
+          io: io,
+          ui: ui
+        })
     end
   end
 
-  defp game_won(%{game_board: game_board, ui: ui, mark: mark}) do
-    print_board(game_board, ui)
-    ui.print_winner(mark)
-  end
-
-  defp game_drawn(%{game_board: game_board, ui: ui}) do
+  defp game_over(:drawn, %{game_board: game_board, ui: ui}) do
     print_board(game_board, ui)
     ui.print_draw()
   end
 
-  defp new_board(board) do
-    board.new()
+  defp game_over(:won, %{game_board: game_board, ui: ui, mark: mark}) do
+    print_board(game_board, ui)
+    ui.print_winner(mark)
   end
 
   defp swap_player(mark, player_cross, player_nought) do
