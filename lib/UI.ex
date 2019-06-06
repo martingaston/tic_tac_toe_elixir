@@ -11,10 +11,23 @@ defmodule UI do
 
   def message(key) do
     case key do
-      :nan -> "Sorry, that's not a valid number. Please enter a whole number."
-      :out_of_bounds -> "Sorry, that number isn't available on the board."
-      :occupied -> "Sorry, that square has been taken. Please enter an unoccupied square."
-      _ -> "Uh-oh, something went wrong!"
+      :title ->
+        "TIC TAC TOE\n"
+
+      :intro ->
+        "Turn friends into enemies by succeeding in placing a complete line in any horizontal, vertical or diagonal direction\n"
+
+      :nan ->
+        "Sorry, that's not a valid number. Please enter a whole number."
+
+      :out_of_bounds ->
+        "Sorry, that number isn't available on the board."
+
+      :occupied ->
+        "Sorry, that square has been taken. Please enter an unoccupied square."
+
+      _ ->
+        "Uh-oh, something went wrong!"
     end
   end
 
@@ -28,13 +41,6 @@ defmodule UI do
 
   def print_draw(io \\ :stdio) do
     out("It's a draw!", io)
-  end
-
-  def print_intro(io \\ :stdio) do
-    out(
-      "TIC TAC TOE\nThe classic game of noughts and crosses!\nTurn friends into enemies as 2 players take turns marking spaces in a grid.\nWin short-lived glory by succeeding in placing a complete line in any horizontal, vertical or diagonal direction.\n",
-      io
-    )
   end
 
   def print_instructions(io \\ :stdio) do
