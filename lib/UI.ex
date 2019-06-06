@@ -36,7 +36,7 @@ defmodule UI do
   end
 
   def print_turn(mark, io \\ :stdio) do
-    out("Player #{mark}'s turn:", io)
+    out("Player #{mark}'s turn:\n", io)
   end
 
   def print_draw(io \\ :stdio) do
@@ -57,7 +57,14 @@ defmodule UI do
   end
 
   defp print_square(state, position, io) do
-    out("| #{Map.get(state, position) || humanise(position)} ", io)
+    square =
+      Map.get(state, position)
+      |> case do
+        "" -> humanise(position)
+        mark -> mark
+      end
+
+    out("| #{square} ", io)
   end
 
   defp out(contents, io) do
