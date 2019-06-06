@@ -49,22 +49,33 @@ defmodule TicTacToe do
         game_won(%{game_board: updated_board, ui: ui, mark: mark})
 
       false ->
-        tick(%{
-          current_player: swap_player(mark, player_cross, player_nought),
-          player_cross: player_cross,
-          player_nought: player_nought,
-          mark: swap_mark(mark),
-          board: board,
-          game_board: updated_board,
-          io: io,
-          ui: ui
-        })
+        case board.moves?(updated_board) do
+          :zero ->
+            game_drawn(%{game_board: updated_board, ui: ui})
+
+          {:ok, _, _} ->
+            tick(%{
+              current_player: swap_player(mark, player_cross, player_nought),
+              player_cross: player_cross,
+              player_nought: player_nought,
+              mark: swap_mark(mark),
+              board: board,
+              game_board: updated_board,
+              io: io,
+              ui: ui
+            })
+        end
     end
   end
 
   defp game_won(%{game_board: game_board, ui: ui, mark: mark}) do
     print_board(game_board, ui)
     ui.print_winner(mark)
+  end
+
+  defp game_drawn(%{game_board: game_board, ui: ui}) do
+    print_board(game_board, ui)
+    ui.print_draw()
   end
 
   defp new_board(board) do
