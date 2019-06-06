@@ -13,9 +13,10 @@ defmodule TicTacToe do
         io: io
       }) do
     game_board = board.new()
-    intro(ui, io)
+    out(ui.message(:title), io)
+    out(ui.message(:intro), io)
 
-    tick(%{
+    tick(:active, %{
       current_player: player_cross,
       player_cross: player_cross,
       player_nought: player_nought,
@@ -27,7 +28,7 @@ defmodule TicTacToe do
     })
   end
 
-  defp tick(%{
+  defp tick(:active, %{
          current_player: current_player,
          player_cross: player_cross,
          player_nought: player_nought,
@@ -46,13 +47,13 @@ defmodule TicTacToe do
     board.status(updated_board)
     |> case do
       :won ->
-        game_over(:won, %{game_board: updated_board, ui: ui, mark: mark})
+        tick(:won, %{game_board: updated_board, ui: ui, mark: mark})
 
       :drawn ->
-        game_over(:drawn, %{game_board: updated_board, ui: ui})
+        tick(:drawn, %{game_board: updated_board, ui: ui})
 
       :active ->
-        tick(%{
+        tick(:active, %{
           current_player: swap_player(mark, player_cross, player_nought),
           player_cross: player_cross,
           player_nought: player_nought,
@@ -65,12 +66,12 @@ defmodule TicTacToe do
     end
   end
 
-  defp game_over(:drawn, %{game_board: game_board, ui: ui}) do
+  defp tick(:drawn, %{game_board: game_board, ui: ui}) do
     print_board(game_board, ui)
     ui.print_draw()
   end
 
-  defp game_over(:won, %{game_board: game_board, ui: ui, mark: mark}) do
+  defp tick(:won, %{game_board: game_board, ui: ui, mark: mark}) do
     print_board(game_board, ui)
     ui.print_winner(mark)
   end
@@ -87,11 +88,6 @@ defmodule TicTacToe do
       @player_cross -> @player_nought
       @player_nought -> @player_cross
     end
-  end
-
-  defp intro(ui, io) do
-    out(ui.message(:title), io)
-    out(ui.message(:intro), io)
   end
 
   defp print_board(board, ui) do
