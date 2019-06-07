@@ -28,6 +28,23 @@ defmodule Board do
     mark == ""
   end
 
+  def status(board) do
+    cond do
+      moves?(board) == :zero -> :drawn
+      hasWon?(board) -> :won
+      true -> :active
+    end
+  end
+
+  def moves?(board) do
+    board
+    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> case do
+      [] -> :zero
+      moves -> {:ok, Enum.count(moves), moves}
+    end
+  end
+
   @doc """
   Recieves a board state and determines if any winning combinations exist
   """

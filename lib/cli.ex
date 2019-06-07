@@ -7,7 +7,11 @@ defmodule TicTacToe.CLI do
 
   def main(_) do
     args = %{
-      board: Board
+      board: Board,
+      ui: UI,
+      io: TicTacToe.Io,
+      player_cross: PlayerHuman,
+      player_nought: PlayerHuman
     }
 
     TicTacToe.start(args)

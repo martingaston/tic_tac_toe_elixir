@@ -11,30 +11,36 @@ defmodule UI do
 
   def message(key) do
     case key do
-      :nan -> "Sorry, that's not a valid number. Please enter a whole number."
-      :out_of_bounds -> "Sorry, that number isn't available on the board."
-      :occupied -> "Sorry, that square has been taken. Please enter an unoccupied square."
-      _ -> "Uh-oh, something went wrong!"
+      :title ->
+        "TIC TAC TOE\n"
+
+      :intro ->
+        "Turn friends into enemies by succeeding in placing a complete line in any horizontal, vertical or diagonal direction\n"
+
+      :nan ->
+        "Sorry, that's not a valid number. Please enter a whole number."
+
+      :out_of_bounds ->
+        "Sorry, that number isn't available on the board."
+
+      :occupied ->
+        "Sorry, that square has been taken. Please enter an unoccupied square."
+
+      _ ->
+        "Uh-oh, something went wrong!"
     end
   end
 
   def print_winner(mark, io \\ :stdio) do
-    out("Player #{mark} wins!", io)
+    out("Player #{mark} wins!\n", io)
   end
 
   def print_turn(mark, io \\ :stdio) do
-    out("Player #{mark}'s turn:", io)
+    out("Player #{mark}'s turn:\n", io)
   end
 
   def print_draw(io \\ :stdio) do
-    out("It's a draw!", io)
-  end
-
-  def print_intro(io \\ :stdio) do
-    out(
-      "TIC TAC TOE\nThe classic game of noughts and crosses!\nTurn friends into enemies as 2 players take turns marking spaces in a grid.\nWin short-lived glory by succeeding in placing a complete line in any horizontal, vertical or diagonal direction.\n",
-      io
-    )
+    out("It's a draw!\n", io)
   end
 
   def print_instructions(io \\ :stdio) do
@@ -51,11 +57,23 @@ defmodule UI do
   end
 
   defp print_square(state, position, io) do
-    out("| #{Map.get(state, position) || humanise(position)} ", io)
+    square =
+      Map.get(state, position)
+      |> case do
+        "" -> humanise(position) |> fade()
+        mark -> mark
+      end
+
+    out("| #{square} ", io)
   end
 
   defp out(contents, io) do
     IO.write(io, contents)
+  end
+
+  defp fade(text) do
+    grey = 242
+    IO.ANSI.color(grey) <> text <> IO.ANSI.reset()
   end
 
   defp humanise(position) do
