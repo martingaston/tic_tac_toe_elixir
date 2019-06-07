@@ -5,13 +5,16 @@ defmodule TicTacToe do
   @player_cross "X"
   @player_nought "O"
 
-  def start(%{
-        board: board,
-        player_cross: player_cross,
-        player_nought: player_nought,
-        ui: ui,
-        io: io
-      }) do
+  def start(
+        %{
+          board: board,
+          player_cross: player_cross,
+          player_nought: player_nought,
+          ui: ui,
+          io: io
+        },
+        device \\ :stdio
+      ) do
     game_board = board.new()
     out(ui.message(:title), io)
     out(ui.message(:intro), io)
@@ -24,7 +27,8 @@ defmodule TicTacToe do
       board: board,
       game_board: game_board,
       io: io,
-      ui: ui
+      ui: ui,
+      device: device
     })
   end
 
@@ -36,11 +40,12 @@ defmodule TicTacToe do
          board: board,
          game_board: game_board,
          io: io,
-         ui: ui
+         ui: ui,
+         device: device
        }) do
     print_board(game_board, ui)
     ui.print_turn(mark)
-    pos = current_player.move(game_board, "", %{board: board, ui: ui, io: io})
+    pos = current_player.move(game_board, "", %{board: board, ui: ui, io: io}, device)
 
     updated_board = board.update(game_board, pos, mark)
 
@@ -61,7 +66,8 @@ defmodule TicTacToe do
           board: board,
           game_board: updated_board,
           io: io,
-          ui: ui
+          ui: ui,
+          device: device
         })
     end
   end
@@ -90,11 +96,11 @@ defmodule TicTacToe do
     end
   end
 
-  defp print_board(board, ui) do
-    ui.print_board(board)
+  defp print_board(board, ui, device \\ :stdio) do
+    ui.print_board(board, device)
   end
 
-  defp out(message, io) do
-    io.output(:stdio, message)
+  defp out(message, io, device \\ :stdio) do
+    io.output(device, message)
   end
 end
