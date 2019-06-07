@@ -8,8 +8,7 @@ defmodule TicTacToe do
   def start(
         %{
           board: board,
-          player_cross: player_cross,
-          player_nought: player_nought,
+          players: [player_cross, player_nought],
           ui: ui,
           io: io
         },

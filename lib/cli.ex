@@ -10,8 +10,7 @@ defmodule TicTacToe.CLI do
       board: Board,
       ui: UI,
       io: TicTacToe.Io,
-      player_cross: PlayerHuman,
-      player_nought: PlayerHuman
+      players: TicTacToe.Players.create(:human_vs_human)
     }
 
     TicTacToe.start(args)
