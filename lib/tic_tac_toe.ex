@@ -8,21 +8,18 @@ defmodule TicTacToe do
   def start(
         %{
           board: board,
-          players: [player_cross, player_nought],
+          players: players,
           ui: ui,
           io: io
         },
         device \\ :stdio
       ) do
     game_board = board.new()
+    players = Enum.zip([@player_cross, @player_nought], players)
     out(ui.message(:title), io)
     out(ui.message(:intro), io)
 
-    tick(:active, %{
-      current_player: player_cross,
-      player_cross: player_cross,
-      player_nought: player_nought,
-      mark: @player_cross,
+    tick(:active, players, %{
       board: board,
       game_board: game_board,
       io: io,
@@ -31,37 +28,30 @@ defmodule TicTacToe do
     })
   end
 
-  defp tick(:active, %{
-         current_player: current_player,
-         player_cross: player_cross,
-         player_nought: player_nought,
-         mark: mark,
+  defp tick(:active, players, %{
          board: board,
          game_board: game_board,
          io: io,
          ui: ui,
          device: device
        }) do
+    {current_mark, current_player} = List.first(players)
     print_board(game_board, ui)
-    ui.print_turn(mark)
+    ui.print_turn(current_mark)
     pos = current_player.move(game_board, "", %{board: board, ui: ui, io: io}, device)
 
-    updated_board = board.update(game_board, pos, mark)
+    updated_board = board.update(game_board, pos, current_mark)
 
     board.status(updated_board)
     |> case do
       :won ->
-        tick(:won, %{game_board: updated_board, ui: ui, mark: mark})
+        tick(:won, %{game_board: updated_board, ui: ui, mark: current_mark})
 
       :drawn ->
         tick(:drawn, %{game_board: updated_board, ui: ui})
 
       :active ->
-        tick(:active, %{
-          current_player: swap_player(mark, player_cross, player_nought),
-          player_cross: player_cross,
-          player_nought: player_nought,
-          mark: swap_mark(mark),
+        tick(:active, Enum.reverse(players), %{
           board: board,
           game_board: updated_board,
           io: io,
@@ -79,20 +69,6 @@ defmodule TicTacToe do
   defp tick(:won, %{game_board: game_board, ui: ui, mark: mark}) do
     print_board(game_board, ui)
     ui.print_winner(mark)
-  end
-
-  defp swap_player(mark, player_cross, player_nought) do
-    case mark do
-      @player_cross -> player_nought
-      @player_nought -> player_cross
-    end
-  end
-
-  defp swap_mark(mark) do
-    case mark do
-      @player_cross -> @player_nought
-      @player_nought -> @player_cross
-    end
   end
 
   defp print_board(board, ui, device \\ :stdio) do
