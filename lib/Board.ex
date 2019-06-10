@@ -41,7 +41,7 @@ defmodule Board do
     |> Enum.filter(fn {_, occupant} -> occupant == "" end)
     |> case do
       [] -> :zero
-      moves -> {:ok, Enum.count(moves), moves}
+      moves -> {:ok, Enum.count(moves), Enum.map(moves, fn {position, occupant} -> position end)}
     end
   end
 
