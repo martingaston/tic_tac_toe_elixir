@@ -10,29 +10,25 @@ defmodule PlayerMinimax do
     end
   end
 
-  def minimax(board, :active, :maximising_player) do
+  def minimax(board, mark, next_player, reducer) do
     {:ok, _, available} = Board.moves?(board)
 
     Enum.map(available, fn square ->
-      updated = Board.update(board, square, "X")
+      updated = Board.update(board, square, mark)
       status = Board.status(updated)
-      %{position: square, score: minimax(updated, status, :minimising_player).score}
+      %{position: square, score: minimax(updated, status, next_player).score}
     end)
-    |> Enum.max_by(fn %{score: score} -> score end)
+    |> reducer.(fn %{score: score} -> score end, fn -> raise(Enum.EmptyError) end)
+  end
+
+  def minimax(board, :active, :maximising_player) do
+    minimax(board, "X", :minimising_player, &Enum.max_by/3)
   end
 
   def minimax(board, :active, :minimising_player) do
-    {:ok, _, available} = Board.moves?(board)
-
-    Enum.map(available, fn square ->
-      updated = Board.update(board, square, "O")
-      status = Board.status(updated)
-      %{position: square, score: minimax(updated, status, :maximising_player).score}
-    end)
-    |> Enum.min_by(fn %{score: score} -> score end)
+    minimax(board, "O", :maximising_player, &Enum.min_by/3)
   end
 
-  # scores on max/min are reversed as the check takes place before a move is played?
   def minimax(board, :won, :maximising_player) do
     {:ok, moves, _} = Board.moves?(board)
     %{score: @losing_score - moves}
@@ -43,5 +39,5 @@ defmodule PlayerMinimax do
     %{score: @winning_score + moves}
   end
 
-  def minimax(_board, :drawn, _), do: %{score: @draw_score}
+  def minimax(_, :drawn, _), do: %{score: @draw_score}
 end
