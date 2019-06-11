@@ -1,6 +1,16 @@
 defmodule PlayerMinimaxTest do
   use ExUnit.Case
 
+  test "returns :error if game is over" do
+    state =
+      Board.new()
+      |> Board.update(0, "X")
+      |> Board.update(1, "X")
+      |> Board.update(2, "X")
+
+    assert PlayerMinimax.move(state, "", %{}) == :error
+  end
+
   test "move plays for a horizontal win" do
     board = Board.new()
 
@@ -55,10 +65,10 @@ defmodule PlayerMinimaxTest do
 
     state =
       board
-      |> Board.update(0, "O")
-      |> Board.update(2, "O")
+      |> Board.update(6, "O")
+      |> Board.update(8, "O")
 
-    assert PlayerMinimax.move(state, "", args) == 1
+    assert PlayerMinimax.move(state, "", args) == 7
   end
 
   test "move plays for closest win" do
