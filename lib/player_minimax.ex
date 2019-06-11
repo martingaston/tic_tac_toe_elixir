@@ -3,12 +3,12 @@ defmodule PlayerMinimax do
   @losing_score -10
   @draw_score 0
 
-  def move(board, _message, _args, _io \\ :stdio) do
+  def move(board, _message, args, _io \\ :stdio) do
     args = %{
       board: board,
       players: %{
-        maximising_player: "O",
-        minimising_player: "X"
+        maximising_player: args.player,
+        minimising_player: args.opponent
       }
     }
 

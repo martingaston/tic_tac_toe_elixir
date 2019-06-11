@@ -36,9 +36,17 @@ defmodule TicTacToe do
          device: device
        }) do
     {current_mark, current_player} = List.first(players)
+    {opponent_mark, _} = List.last(players)
     print_board(game_board, ui)
     ui.print_turn(current_mark)
-    pos = current_player.move(game_board, "", %{board: board, ui: ui, io: io}, device)
+
+    pos =
+      current_player.move(
+        game_board,
+        "",
+        %{board: board, player: current_mark, opponent: opponent_mark, ui: ui, io: io},
+        device
+      )
 
     updated_board = board.update(game_board, pos, current_mark)
 

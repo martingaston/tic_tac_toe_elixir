@@ -8,14 +8,22 @@ defmodule PlayerMinimaxTest do
       |> Board.update(1, "X")
       |> Board.update(2, "X")
 
-    assert PlayerMinimax.move(state, "", %{}) == :error
+    args = %{
+      board: state,
+      player: "X",
+      opponent: "O"
+    }
+
+    assert PlayerMinimax.move(state, "", args) == :error
   end
 
   test "move plays for a horizontal win" do
     board = Board.new()
 
     args = %{
-      board: board
+      board: board,
+      player: "X",
+      opponent: "O"
     }
 
     state =
@@ -30,7 +38,9 @@ defmodule PlayerMinimaxTest do
     board = Board.new()
 
     args = %{
-      board: board
+      board: board,
+      player: "X",
+      opponent: "O"
     }
 
     state =
@@ -45,7 +55,9 @@ defmodule PlayerMinimaxTest do
     board = Board.new()
 
     args = %{
-      board: board
+      board: board,
+      player: "X",
+      opponent: "O"
     }
 
     state =
@@ -60,7 +72,9 @@ defmodule PlayerMinimaxTest do
     board = Board.new()
 
     args = %{
-      board: board
+      board: board,
+      player: "X",
+      opponent: "O"
     }
 
     state =
@@ -75,7 +89,9 @@ defmodule PlayerMinimaxTest do
     board = Board.new()
 
     args = %{
-      board: board
+      board: board,
+      player: "X",
+      opponent: "O"
     }
 
     state =
