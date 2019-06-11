@@ -23,11 +23,11 @@ defmodule PlayerMinimax do
   end
 
   def minimax(board, :active, :maximising_player) do
-    traverse(board, "X", :minimising_player, &Enum.max_by/3)
+    traverse(board, "O", :minimising_player, &Enum.max_by/3)
   end
 
   def minimax(board, :active, :minimising_player) do
-    traverse(board, "O", :maximising_player, &Enum.min_by/3)
+    traverse(board, "X", :maximising_player, &Enum.min_by/3)
   end
 
   def minimax(board, :won, :maximising_player) do
