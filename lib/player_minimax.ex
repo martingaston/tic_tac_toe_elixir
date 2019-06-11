@@ -11,7 +11,7 @@ defmodule PlayerMinimax do
   end
 
   # the function signature is different enough to warrant a new fn 
-  def minimax(board, mark, next_player, reducer) do
+  def traverse(board, mark, next_player, reducer) do
     Board.available(board)
     |> Enum.map(fn square ->
       # can these be piped at all? this feels rather imperative
@@ -23,11 +23,11 @@ defmodule PlayerMinimax do
   end
 
   def minimax(board, :active, :maximising_player) do
-    minimax(board, "X", :minimising_player, &Enum.max_by/3)
+    traverse(board, "X", :minimising_player, &Enum.max_by/3)
   end
 
   def minimax(board, :active, :minimising_player) do
-    minimax(board, "O", :maximising_player, &Enum.min_by/3)
+    traverse(board, "O", :maximising_player, &Enum.min_by/3)
   end
 
   def minimax(board, :won, :maximising_player) do
