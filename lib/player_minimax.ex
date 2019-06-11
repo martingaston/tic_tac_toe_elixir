@@ -16,43 +16,32 @@ defmodule PlayerMinimax do
     Enum.map(available, fn square ->
       updated = Board.update(board, square, "X")
       status = Board.status(updated)
-      %{position: square, score: score(updated, status, :minimising_player)}
+      %{position: square, score: minimax(updated, status, :minimising_player).score}
     end)
     |> Enum.max_by(fn %{score: score} -> score end)
   end
 
-  # scores on max/min are reversed as the check takes place before a move is played?
-  def score(board, :won, :maximising_player) do
-    {:ok, moves, _} = Board.moves?(board)
-    @losing_score - moves
-  end
-
-  def score(board, :won, :minimising_player) do
-    {:ok, moves, _} = Board.moves?(board)
-    @winning_score + moves
-  end
-
-  def score(_board, :drawn, _), do: @draw_score
-
-  def score(board, :active, :minimising_player) do
+  def minimax(board, :active, :minimising_player) do
     {:ok, _, available} = Board.moves?(board)
 
     Enum.map(available, fn square ->
       updated = Board.update(board, square, "O")
       status = Board.status(updated)
-      score(updated, status, :maximising_player)
+      %{position: square, score: minimax(updated, status, :maximising_player).score}
     end)
-    |> Enum.min()
+    |> Enum.min_by(fn %{score: score} -> score end)
   end
 
-  def score(board, :active, :maximising_player) do
-    {:ok, _, available} = Board.moves?(board)
-
-    Enum.map(available, fn square ->
-      updated = Board.update(board, square, "X")
-      status = Board.status(updated)
-      score(updated, status, :minimising_player)
-    end)
-    |> Enum.max()
+  # scores on max/min are reversed as the check takes place before a move is played?
+  def minimax(board, :won, :maximising_player) do
+    {:ok, moves, _} = Board.moves?(board)
+    %{score: @losing_score - moves}
   end
+
+  def minimax(board, :won, :minimising_player) do
+    {:ok, moves, _} = Board.moves?(board)
+    %{score: @winning_score + moves}
+  end
+
+  def minimax(_board, :drawn, _), do: %{score: @draw_score}
 end
