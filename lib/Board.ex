@@ -28,9 +28,15 @@ defmodule Board do
     mark == ""
   end
 
+  def available_positions(board) do
+    board
+    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.map(fn {position, _} -> position end)
+  end
+
   def status(board) do
     cond do
-      moves?(board) == :zero -> :drawn
+      moves?(board) == :no_moves -> :drawn
       hasWon?(board) -> :won
       true -> :active
     end
@@ -40,8 +46,8 @@ defmodule Board do
     board
     |> Enum.filter(fn {_, occupant} -> occupant == "" end)
     |> case do
-      [] -> :zero
-      moves -> {:ok, Enum.count(moves), moves}
+      [] -> :no_moves
+      moves -> Enum.count(moves)
     end
   end
 

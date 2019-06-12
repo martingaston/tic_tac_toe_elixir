@@ -10,8 +10,7 @@ defmodule TicTacToeTest do
       board: Board,
       ui: UI,
       io: TicTacToe.Io,
-      player_cross: PlayerHuman,
-      player_nought: PlayerHuman
+      players: TicTacToe.Players.create(:human_vs_human)
     }
 
     assert TicTacToe.start(args, device) == :ok
@@ -25,8 +24,7 @@ defmodule TicTacToeTest do
       board: Board,
       ui: UI,
       io: TicTacToe.Io,
-      player_cross: PlayerHuman,
-      player_nought: PlayerHuman
+      players: TicTacToe.Players.create(:human_vs_human)
     }
 
     assert TicTacToe.start(args, device) == :ok
@@ -40,8 +38,7 @@ defmodule TicTacToeTest do
       board: Board,
       ui: UI,
       io: TicTacToe.Io,
-      player_cross: PlayerHuman,
-      player_nought: PlayerHuman
+      players: TicTacToe.Players.create(:human_vs_human)
     }
 
     assert TicTacToe.start(args, device) == :ok
