@@ -4,9 +4,11 @@ defmodule PlayerMinimax do
   @draw_score 0
 
   def move(board, _message, args, _io \\ :stdio) do
+    # TODO I do not think mangaging dependencies like this is quite right - I'm leaning towards making a struct with required fields.
     args = %{
       board: board,
       players: %{
+        # TODO the args.player and args.opponent is currently a bit of a hack so we can rush to green
         maximising_player: args.player,
         minimising_player: args.opponent
       }
@@ -19,6 +21,7 @@ defmodule PlayerMinimax do
   end
 
   def traverse(args, next_player, reducer) do
+    #TODO there's got to be a better way of handling this - I like matching on the atom, but maybe we can bind the atom and the mark into a tuple
     mark =
       case next_player do
         :maximising_player -> Map.get(args.players, :minimising_player)
@@ -27,7 +30,7 @@ defmodule PlayerMinimax do
 
     Board.available_positions(args.board)
     |> Enum.map(fn square ->
-      # can these be piped at all? this feels rather imperative
+      # TODO can these be piped at all? this feels rather imperative
       updated = Board.update(args.board, square, mark)
       status = Board.status(updated)
       %{position: square, score: minimax(%{args | board: updated}, status, next_player).score}
