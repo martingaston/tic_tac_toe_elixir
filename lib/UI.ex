@@ -1,12 +1,37 @@
 defmodule UI do
+  def print_board_string(board) do
+    [
+      header(),
+      row(board, 0..2),
+      header(),
+      row(board, 3..5),
+      header(),
+      row(board, 6..8),
+      header(),
+      ""
+    ]
+    |> Enum.join("\n")
+  end
+
   def print_board(state, io \\ :stdio) do
-    print_header(io)
-    print_row(state, 0..2, io)
-    print_header(io)
-    print_row(state, 3..5, io)
-    print_header(io)
-    print_row(state, 6..8, io)
-    print_header(io)
+    out(print_board_string(state), io)
+  end
+
+  defp header(), do: "+-----------+"
+
+  defp row(board, range) do
+    Enum.reduce(range, "", fn pos, acc -> acc <> square(board, pos) end) <> "|"
+  end
+
+  defp square(board, position) do
+    square =
+      Board.get(board, position)
+      |> case do
+        "" -> humanise(position) |> fade()
+        mark -> mark
+      end
+
+    "| #{square} "
   end
 
   def message(key) do
@@ -45,26 +70,6 @@ defmodule UI do
 
   def print_instructions(io \\ :stdio) do
     out("Input numbers between 1-9 on alternative turns to place your mark in the 3x3 grid.", io)
-  end
-
-  defp print_header(io) do
-    out("+-----------+\n", io)
-  end
-
-  defp print_row(state, range, io) do
-    Enum.each(range, fn pos -> print_square(state, pos, io) end)
-    out("|\n", io)
-  end
-
-  defp print_square(state, position, io) do
-    square =
-      Map.get(state, position)
-      |> case do
-        "" -> humanise(position) |> fade()
-        mark -> mark
-      end
-
-    out("| #{square} ", io)
   end
 
   defp out(contents, io) do
