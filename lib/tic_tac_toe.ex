@@ -16,8 +16,8 @@ defmodule TicTacToe do
       ) do
     game_board = board.new()
     players = Enum.zip([@player_cross, @player_nought], players)
-    out(ui.message(:title), io)
-    out(ui.message(:intro), io)
+    out(ui.message(:title), io, device)
+    out(ui.message(:intro), io, device)
 
     tick(:active, players, %{
       board: board,
@@ -37,8 +37,8 @@ defmodule TicTacToe do
        }) do
     {current_mark, current_player} = List.first(players)
     {opponent_mark, _} = List.last(players)
-    print_board(game_board, ui)
-    ui.print_turn(current_mark)
+    print_board(game_board, ui, io, device)
+    out(ui.player_turn(current_mark), io, device)
 
     pos =
       current_player.move(
@@ -53,10 +53,16 @@ defmodule TicTacToe do
     board.status(updated_board)
     |> case do
       :won ->
-        tick(:won, %{game_board: updated_board, ui: ui, mark: current_mark})
+        tick(:won, %{
+          game_board: updated_board,
+          io: io,
+          device: device,
+          ui: ui,
+          mark: current_mark
+        })
 
       :drawn ->
-        tick(:drawn, %{game_board: updated_board, ui: ui})
+        tick(:drawn, %{game_board: updated_board, io: io, device: device, ui: ui})
 
       :active ->
         tick(:active, Enum.reverse(players), %{
@@ -69,21 +75,21 @@ defmodule TicTacToe do
     end
   end
 
-  defp tick(:drawn, %{game_board: game_board, ui: ui}) do
-    print_board(game_board, ui)
-    ui.print_draw()
+  defp tick(:drawn, %{game_board: game_board, ui: ui, io: io, device: device}) do
+    print_board(game_board, ui, io, device)
+    out(ui.draw(), io, device)
   end
 
-  defp tick(:won, %{game_board: game_board, ui: ui, mark: mark}) do
-    print_board(game_board, ui)
-    ui.print_winner(mark)
+  defp tick(:won, %{game_board: game_board, ui: ui, io: io, device: device, mark: mark}) do
+    print_board(game_board, ui, io, device)
+    out(ui.winner(mark), io, device)
   end
 
-  defp print_board(board, ui, device \\ :stdio) do
-    ui.print_board(board, device)
+  defp print_board(board, ui, io, device) do
+    out(ui.draw_board(board), io, device)
   end
 
-  defp out(message, io, device \\ :stdio) do
+  defp out(message, io, device) do
     io.output(device, message)
   end
 end

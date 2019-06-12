@@ -1,5 +1,5 @@
 defmodule UI do
-  def print_board_string(board) do
+  def draw_board(board) do
     [
       header(),
       row(board, 0..2),
@@ -11,10 +11,6 @@ defmodule UI do
       ""
     ]
     |> Enum.join("\n")
-  end
-
-  def print_board(state, io \\ :stdio) do
-    out(print_board_string(state), io)
   end
 
   defp header(), do: "+-----------+"
@@ -56,24 +52,20 @@ defmodule UI do
     end
   end
 
-  def print_winner(mark, io \\ :stdio) do
-    out("Player #{mark} wins!\n", io)
+  def winner(mark) do
+    "Player #{mark} wins!"
   end
 
-  def print_turn(mark, io \\ :stdio) do
-    out("Player #{mark}'s turn:\n", io)
+  def player_turn(mark) do
+    "Player #{mark}'s turn:"
   end
 
-  def print_draw(io \\ :stdio) do
-    out("It's a draw!\n", io)
+  def draw() do
+    "It's a draw!"
   end
 
-  def print_instructions(io \\ :stdio) do
-    out("Input numbers between 1-9 on alternative turns to place your mark in the 3x3 grid.", io)
-  end
-
-  defp out(contents, io) do
-    IO.write(io, contents)
+  def instructions() do
+    "Input numbers between 1-9 on alternative turns to place your mark in the 3x3 grid."
   end
 
   defp fade(text) do
