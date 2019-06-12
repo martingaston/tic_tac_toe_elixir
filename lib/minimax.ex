@@ -3,11 +3,12 @@ defmodule Minimax do
   @losing_score -10
   @draw_score 0
 
-  defstruct [:board, :players]
+  defstruct [:board, :status, :players]
 
   def new(board, maximising_player_mark, minimising_player_mark) do
     %Minimax{
       board: board,
+      status: Board.status(board),
       players: %{
         maximising_player: maximising_player_mark,
         minimising_player: minimising_player_mark
@@ -40,14 +41,22 @@ defmodule Minimax do
   defp traverse(args, next_player, reducer) do
     Board.available_positions(args.board)
     |> Enum.map(fn square ->
-      # TODO can these be piped at all? this feels rather imperative
-      updated = Board.update(args.board, square, mark(args, next_player))
-      status = Board.status(updated)
-      %{position: square, score: minimax(%{args | board: updated}, status, next_player).score}
+      args
+      |> update_board(square, next_player)
+      |> update_status()
+      |> score_position(square, next_player)
     end)
     |> reducer.(fn %{score: score} -> score end, fn -> raise(Enum.EmptyError) end)
   end
 
   defp mark(%{players: %{minimising_player: mark}}, :maximising_player), do: mark
   defp mark(%{players: %{maximising_player: mark}}, :minimising_player), do: mark
+
+  defp update_board(args, position, next_player),
+    do: %{args | board: Board.update(args.board, position, mark(args, next_player))}
+
+  defp update_status(args), do: %{args | status: Board.status(args.board)}
+
+  defp score_position(args, position, next_player),
+    do: %{position: position, score: minimax(args, args.status, next_player).score}
 end
