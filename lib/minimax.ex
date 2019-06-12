@@ -24,11 +24,11 @@ defmodule Minimax do
   end
 
   defp minimax(args, :active, :maximising_player) do
-    traverse(args, :minimising_player, &Enum.max_by/3)
+    traverse(args, :minimising_player)
   end
 
   defp minimax(args, :active, :minimising_player) do
-    traverse(args, :maximising_player, &Enum.min_by/3)
+    traverse(args, :maximising_player)
   end
 
   defp minimax(args, :won, :maximising_player) do
@@ -41,15 +41,21 @@ defmodule Minimax do
 
   defp minimax(_, :drawn, _), do: %{score: @draw_score}
 
-  defp traverse(args, next_player, reducer) do
+  defp traverse(args, next_player) do
     Board.available_positions(args.board)
     |> Enum.map(fn square ->
       args
       |> update_move(square, next_player)
       |> score_position(square, next_player)
     end)
-    |> reducer.(fn %{score: score} -> score end, fn -> raise(Enum.EmptyError) end)
+    |> result(next_player)
   end
+
+  defp result(scores, :maximising_player),
+    do: Enum.min_by(scores, fn %{score: score} -> score end)
+
+  defp result(scores, :minimising_player),
+    do: Enum.max_by(scores, fn %{score: score} -> score end)
 
   defp mark(%{players: %{minimising_player: mark}}, :maximising_player), do: mark
   defp mark(%{players: %{maximising_player: mark}}, :minimising_player), do: mark
