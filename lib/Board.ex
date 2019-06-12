@@ -1,4 +1,5 @@
 defmodule Board do
+  @empty_square ""
   @moduledoc """
   Contains functions to determine board management - creation, updating and determining if a player has filled a row, column or diagonal
   """
@@ -7,7 +8,7 @@ defmodule Board do
   Return an empty board
   """
   def new do
-    Enum.reduce(0..8, %{}, &Map.put(&2, &1, ""))
+    Enum.reduce(0..8, %{}, &Map.put(&2, &1, @empty_square))
   end
 
   @doc """
@@ -15,7 +16,7 @@ defmodule Board do
   """
   def update(board, pos, mark) do
     case get(board, pos) do
-      square when square == "" -> Map.put(board, pos, mark)
+      @empty_square -> Map.put(board, pos, mark)
       _ -> board
     end
   end
@@ -33,13 +34,13 @@ defmodule Board do
   def available?(board, position) do
     case get(board, position) do
       :error -> :error
-      square -> square == ""
+      square -> square == @empty_square
     end
   end
 
   def available_positions(board) do
     board
-    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
     |> Enum.map(fn {position, _} -> position end)
   end
 
@@ -53,7 +54,7 @@ defmodule Board do
 
   def moves?(board) do
     board
-    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
     |> case do
       [] -> :no_moves
       moves -> Enum.count(moves)
@@ -80,7 +81,8 @@ defmodule Board do
         Map.take(board, x)
         |> Map.values()
 
-      Enum.count(values) == 3 && hd(values) != "" && Enum.all?(values, &(&1 == hd(values)))
+      Enum.count(values) == 3 && hd(values) != @empty_square &&
+        Enum.all?(values, &(&1 == hd(values)))
     end)
   end
 end
