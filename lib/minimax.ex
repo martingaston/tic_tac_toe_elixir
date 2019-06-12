@@ -17,7 +17,10 @@ defmodule Minimax do
   end
 
   def best_position(args) do
-    minimax(args, :active, :maximising_player).position
+    case args.status do
+      :active -> minimax(args, :active, :maximising_player).position
+      _ -> :error
+    end
   end
 
   defp minimax(args, :active, :maximising_player) do
@@ -42,8 +45,7 @@ defmodule Minimax do
     Board.available_positions(args.board)
     |> Enum.map(fn square ->
       args
-      |> update_board(square, next_player)
-      |> update_status()
+      |> update_move(square, next_player)
       |> score_position(square, next_player)
     end)
     |> reducer.(fn %{score: score} -> score end, fn -> raise(Enum.EmptyError) end)
@@ -51,6 +53,9 @@ defmodule Minimax do
 
   defp mark(%{players: %{minimising_player: mark}}, :maximising_player), do: mark
   defp mark(%{players: %{maximising_player: mark}}, :minimising_player), do: mark
+
+  defp update_move(args, position, next_player),
+    do: args |> update_board(position, next_player) |> update_status()
 
   defp update_board(args, position, next_player),
     do: %{args | board: Board.update(args.board, position, mark(args, next_player))}
