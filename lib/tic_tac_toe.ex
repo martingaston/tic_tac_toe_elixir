@@ -37,7 +37,7 @@ defmodule TicTacToe do
        }) do
     {current_mark, current_player} = List.first(players)
     {opponent_mark, _} = List.last(players)
-    print_board(game_board, ui, io, device)
+    out(ui.draw_board(game_board), io, device)
     out(ui.player_turn(current_mark), io, device)
 
     pos =
@@ -76,17 +76,13 @@ defmodule TicTacToe do
   end
 
   defp tick(:drawn, %{game_board: game_board, ui: ui, io: io, device: device}) do
-    print_board(game_board, ui, io, device)
+    out(ui.draw_board(game_board), io, device)
     out(ui.draw(), io, device)
   end
 
   defp tick(:won, %{game_board: game_board, ui: ui, io: io, device: device, mark: mark}) do
-    print_board(game_board, ui, io, device)
+    out(ui.draw_board(game_board), io, device)
     out(ui.winner(mark), io, device)
-  end
-
-  defp print_board(board, ui, io, device) do
-    out(ui.draw_board(board), io, device)
   end
 
   defp out(message, io, device) do
