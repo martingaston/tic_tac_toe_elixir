@@ -28,6 +28,12 @@ defmodule Board do
     mark == ""
   end
 
+  def available_positions(board) do
+    board
+    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.map(fn {position, _} -> position end)
+  end
+
   def status(board) do
     cond do
       moves?(board) == :no_moves -> :drawn

@@ -25,7 +25,7 @@ defmodule PlayerMinimax do
         :minimising_player -> Map.get(args.players, :maximising_player)
       end
 
-    Board.available(args.board)
+    Board.available_positions(args.board)
     |> Enum.map(fn square ->
       # can these be piped at all? this feels rather imperative
       updated = Board.update(args.board, square, mark)
