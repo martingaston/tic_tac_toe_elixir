@@ -51,12 +51,6 @@ defmodule Board do
     end
   end
 
-  def available(board) do
-    board
-    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
-    |> Enum.map(fn {position, _} -> position end)
-  end
-
   @doc """
   Recieves a board state and determines if any winning combinations exist
   """
