@@ -1,4 +1,5 @@
 defmodule Board do
+  @empty_square ""
   @moduledoc """
   Contains functions to determine board management - creation, updating and determining if a player has filled a row, column or diagonal
   """
@@ -7,16 +8,23 @@ defmodule Board do
   Return an empty board
   """
   def new do
-    Enum.reduce(0..8, %{}, &Map.put(&2, &1, ""))
+    Enum.reduce(0..8, %{}, &Map.put(&2, &1, @empty_square))
   end
 
   @doc """
   Update an existing board in the specified position with a specified mark. Does not overwrite existing marks.
   """
   def update(board, pos, mark) do
-    case Map.fetch(board, pos) do
-      {:ok, square} when square == "" -> Map.put(board, pos, mark)
+    case get(board, pos) do
+      @empty_square -> Map.put(board, pos, mark)
       _ -> board
+    end
+  end
+
+  def get(board, pos) do
+    case Map.fetch(board, pos) do
+      {:ok, square} -> square
+      _ -> :error
     end
   end
 
@@ -24,13 +32,15 @@ defmodule Board do
   Recieves a board and a position and returns a bool indicating if the requested position is available
   """
   def available?(board, position) do
-    {:ok, mark} = Map.fetch(board, position)
-    mark == ""
+    case get(board, position) do
+      :error -> :error
+      square -> square == @empty_square
+    end
   end
 
   def available_positions(board) do
     board
-    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
     |> Enum.map(fn {position, _} -> position end)
   end
 
@@ -44,7 +54,7 @@ defmodule Board do
 
   def moves?(board) do
     board
-    |> Enum.filter(fn {_, occupant} -> occupant == "" end)
+    |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
     |> case do
       [] -> :no_moves
       moves -> Enum.count(moves)
@@ -71,7 +81,8 @@ defmodule Board do
         Map.take(board, x)
         |> Map.values()
 
-      Enum.count(values) == 3 && hd(values) != "" && Enum.all?(values, &(&1 == hd(values)))
+      Enum.count(values) == 3 && hd(values) != @empty_square &&
+        Enum.all?(values, &(&1 == hd(values)))
     end)
   end
 end
