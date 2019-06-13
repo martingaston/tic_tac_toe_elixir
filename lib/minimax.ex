@@ -48,13 +48,13 @@ defmodule Minimax do
       |> update_move(square, next_player)
       |> score_position(square, next_player)
     end)
-    |> result(next_player)
+    |> optimal(next_player)
   end
 
-  defp result(scores, :maximising_player),
+  defp optimal(scores, :maximising_player),
     do: Enum.min_by(scores, fn %{score: score} -> score end)
 
-  defp result(scores, :minimising_player),
+  defp optimal(scores, :minimising_player),
     do: Enum.max_by(scores, fn %{score: score} -> score end)
 
   defp mark(%{players: %{minimising_player: mark}}, :maximising_player), do: mark
