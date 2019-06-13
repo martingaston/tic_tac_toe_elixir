@@ -17,8 +17,9 @@ defmodule TicTacToe do
     out = fn message -> io.output(device, message) end
     game_board = board.new()
     players = Enum.zip([@player_cross, @player_nought], players)
-    out.(ui.message(:title))
-    out.(ui.message(:intro))
+
+    [ui.message(:title), ui.message(:intro)]
+    |> out.()
 
     tick(:active, players, %{
       board: board,
@@ -40,8 +41,9 @@ defmodule TicTacToe do
        }) do
     {current_mark, current_player} = List.first(players)
     {opponent_mark, _} = List.last(players)
-    out.(ui.draw_board(game_board))
-    out.(ui.player_turn(current_mark))
+
+    [ui.draw_board(game_board), ui.player_turn(current_mark)]
+    |> out.()
 
     pos =
       current_player.move(
@@ -81,12 +83,12 @@ defmodule TicTacToe do
   end
 
   defp tick(:drawn, %{game_board: game_board, ui: ui, out: out}) do
-    out.(ui.draw_board(game_board))
-    out.(ui.draw())
+    [ui.draw_board(game_board), ui.draw()]
+    |> out.()
   end
 
   defp tick(:won, %{game_board: game_board, out: out, ui: ui, mark: mark}) do
-    out.(ui.draw_board(game_board))
-    out.(ui.winner(mark))
+    [ui.draw_board(game_board), ui.winner(mark)]
+    |> out.()
   end
 end
