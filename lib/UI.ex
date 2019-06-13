@@ -33,10 +33,10 @@ defmodule UI do
   def message(key) do
     case key do
       :title ->
-        "TIC TAC TOE\n"
+        "TIC TAC TOE"
 
       :intro ->
-        "Turn friends into enemies by succeeding in placing a complete line in any horizontal, vertical or diagonal direction\n"
+        "Turn friends into enemies by succeeding in placing a complete line in any horizontal, vertical or diagonal direction"
 
       :nan ->
         "Sorry, that's not a valid number. Please enter a whole number."
@@ -57,7 +57,7 @@ defmodule UI do
   end
 
   def player_turn(mark) do
-    "Player #{mark}'s turn:"
+    "Player #{mark}'s turn: "
   end
 
   def draw() do
