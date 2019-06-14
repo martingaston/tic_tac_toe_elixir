@@ -23,17 +23,13 @@ defmodule TicTacToe do
     args.board_manager.status(updated_board)
     |> case do
       :won ->
-        next(:won, %{args | board: updated_board})
+        next(:won, Args.update_board(args, updated_board))
 
       :drawn ->
-        next(:drawn, %{args | board: updated_board})
+        next(:drawn, Args.update_board(args, updated_board))
 
       :active ->
-        next(:active, %{
-          args
-          | board: updated_board,
-            players: Players.next_turn(args.players)
-        })
+        next(:active, Args.update_board(args, updated_board) |> Args.update_players())
     end
   end
 
