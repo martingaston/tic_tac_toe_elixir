@@ -6,7 +6,7 @@ defmodule TicTacToe.CLI do
   """
   @device :stdio
   def main(_) do
-    args = Game.new(:human_vs_human, @device)
+    args = Args.new(:human_vs_human, @device)
     TicTacToe.start(args)
   end
 end

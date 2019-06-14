@@ -1,11 +1,11 @@
-defmodule Game do
+defmodule Args do
   @enforce_keys [:board, :board_manager, :ui, :out, :in, :players]
   defstruct [:board_manager, :board, :ui, :in, :out, :players]
   @player_cross "X"
   @player_nought "O"
 
   def new(mode, device \\ :stdio) do
-    %Game{
+    %Args{
       board_manager: Board,
       board: Board.new(),
       ui: UI,

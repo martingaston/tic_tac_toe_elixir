@@ -6,7 +6,7 @@ defmodule TicTacToeTest do
     input_player_cross_win = "1\n7\n2\n8\n3"
     {:ok, device} = StringIO.open(input_player_cross_win)
 
-    args = Game.new(:human_vs_human, device)
+    args = Args.new(:human_vs_human, device)
     assert TicTacToe.start(args) == :won
   end
 
@@ -14,7 +14,7 @@ defmodule TicTacToeTest do
     input_player_nought_win = "1\n3\n2\n5\n4\n7"
     {:ok, device} = StringIO.open(input_player_nought_win)
 
-    args = Game.new(:human_vs_human, device)
+    args = Args.new(:human_vs_human, device)
     assert TicTacToe.start(args) == :won
   end
 
@@ -22,7 +22,7 @@ defmodule TicTacToeTest do
     input_players_draw = "1\n2\n5\n9\n6\n4\n7\n3\n8"
     {:ok, device} = StringIO.open(input_players_draw)
 
-    args = Game.new(:human_vs_human, device)
+    args = Args.new(:human_vs_human, device)
     assert TicTacToe.start(args) == :drawn
   end
 end
