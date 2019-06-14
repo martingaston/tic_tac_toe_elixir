@@ -2,104 +2,66 @@ defmodule PlayerMinimaxTest do
   use ExUnit.Case
 
   test "returns :error if game is over" do
-    state =
+    updated_board =
       Board.new()
       |> Board.update(0, "X")
       |> Board.update(1, "X")
       |> Board.update(2, "X")
 
-    args = %{
-      board: state,
-      player: "X",
-      opponent: "O"
-    }
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
 
-    assert PlayerMinimax.move(state, "", args) == :error
+    assert PlayerMinimax.move(args) == :error
   end
 
   test "move plays for a horizontal win" do
-    board = Board.new()
-
-    args = %{
-      board: board,
-      player: "X",
-      opponent: "O"
-    }
-
-    state =
-      board
+    updated_board =
+      Board.new()
       |> Board.update(0, "X")
       |> Board.update(1, "X")
 
-    assert PlayerMinimax.move(state, "", args) == 2
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
+
+    assert PlayerMinimax.move(args) == 2
   end
 
   test "move plays for a vertical win" do
-    board = Board.new()
-
-    args = %{
-      board: board,
-      player: "X",
-      opponent: "O"
-    }
-
-    state =
-      board
+    updated_board =
+      Board.new()
       |> Board.update(0, "X")
       |> Board.update(3, "X")
 
-    assert PlayerMinimax.move(state, "", args) == 6
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
+    assert PlayerMinimax.move(args) == 6
   end
 
   test "move plays for a diagonal win" do
-    board = Board.new()
-
-    args = %{
-      board: board,
-      player: "X",
-      opponent: "O"
-    }
-
-    state =
-      board
+    updated_board =
+      Board.new()
       |> Board.update(0, "X")
       |> Board.update(4, "X")
 
-    assert PlayerMinimax.move(state, "", args) == 8
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
+    assert PlayerMinimax.move(args) == 8
   end
 
   test "move blocks opponent from a win" do
-    board = Board.new()
+    updated_board =
+      Board.new()
+      |> Board.update(6, "X")
+      |> Board.update(8, "X")
 
-    args = %{
-      board: board,
-      player: "X",
-      opponent: "O"
-    }
-
-    state =
-      board
-      |> Board.update(6, "O")
-      |> Board.update(8, "O")
-
-    assert PlayerMinimax.move(state, "", args) == 7
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
+    assert PlayerMinimax.move(args) == 7
   end
 
   test "move plays for closest win" do
-    board = Board.new()
-
-    args = %{
-      board: board,
-      player: "X",
-      opponent: "O"
-    }
-
-    state =
-      board
+    updated_board =
+      Board.new()
       |> Board.update(0, "X")
       |> Board.update(1, "X")
       |> Board.update(8, "X")
 
-    assert PlayerMinimax.move(state, "", args) == 2
+    args = Args.new(:human_vs_minimax) |> Args.update_board(updated_board)
+    assert PlayerMinimax.move(args) == 2
   end
 end
