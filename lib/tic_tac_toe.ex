@@ -19,19 +19,7 @@ defmodule TicTacToe do
     [args.ui.draw_board(args.board), args.ui.player_turn(current_mark)]
     |> args.out.()
 
-    pos =
-      current_player.move(
-        args.board,
-        "",
-        %{
-          board: args.board_manager,
-          player: current_mark,
-          opponent: opponent_mark,
-          ui: args.ui,
-          io: args.io
-        },
-        args.device
-      )
+    pos = current_player.move(args)
 
     updated_board = args.board_manager.update(args.board, pos, current_mark)
 
