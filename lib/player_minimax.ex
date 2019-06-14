@@ -1,6 +1,11 @@
 defmodule PlayerMinimax do
-  def move(board, player_mark, opponent_mark) do
-    Minimax.new(board, player_mark, opponent_mark)
+  defstruct [:player, :opponent]
+
+  def new(player_mark, opponent_mark),
+    do: %PlayerMinimax{player: player_mark, opponent: opponent_mark}
+
+  def move(%PlayerMinimax{player: player, opponent: opponent}, board) do
+    Minimax.new(board, player, opponent)
     |> Minimax.best_position()
   end
 end
