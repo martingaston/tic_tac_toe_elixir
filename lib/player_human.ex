@@ -5,24 +5,24 @@ defmodule PlayerHuman do
     args.out.(message)
 
     args.in.()
-    |> valid_move?(args)
+    |> valid_move?(args.game.board)
     |> case do
       {:ok, position} -> position
       {:error, message} -> move(args, message)
     end
   end
 
-  def valid_move?(position, _args) when not is_integer(position) do
+  def valid_move?(position, _) when not is_integer(position) do
     {:error, :nan}
   end
 
-  def valid_move?(position, _args)
+  def valid_move?(position, _)
       when position < @first_square or position > @last_square do
     {:error, :out_of_bounds}
   end
 
-  def valid_move?(position, args) do
-    if Board.available?(args.board, position) do
+  def valid_move?(position, board) do
+    if Board.available?(board, position) do
       {:ok, position}
     else
       {:error, :occupied}

@@ -5,10 +5,10 @@ defmodule Minimax do
 
   defstruct [:board, :status, :players]
 
-  def new(args, maximising_player_mark, minimising_player_mark) do
+  def new(%Args{game: game}, maximising_player_mark, minimising_player_mark) do
     %Minimax{
-      board: args.board,
-      status: Board.status(args.board),
+      board: game.board,
+      status: Board.status(game.board),
       players: %{
         maximising_player: maximising_player_mark,
         minimising_player: minimising_player_mark

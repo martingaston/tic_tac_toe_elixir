@@ -12,13 +12,13 @@ defmodule TicTacToe do
     next(:active, args)
   end
 
-  defp next(:active, args) do
-    [args.ui.draw_board(args.board), args.ui.player_turn(Players.current_mark(args.players))]
+  defp next(:active, %Args{game: game} = args) do
+    [args.ui.draw_board(game.board), args.ui.player_turn(Players.current_mark(game.players))]
     |> args.out.()
 
-    pos = Players.current_player(args.players).move(args)
+    pos = Players.current_player(game.players).move(args)
 
-    updated_board = Board.update(args.board, pos, Players.current_mark(args.players))
+    updated_board = Board.update(game.board, pos, Players.current_mark(game.players))
 
     Board.status(updated_board)
     |> case do
@@ -33,17 +33,17 @@ defmodule TicTacToe do
     end
   end
 
-  defp next(:drawn, args) do
-    [args.ui.draw_board(args.board), args.ui.draw()]
+  defp next(:drawn, %Args{game: game} = args) do
+    [args.ui.draw_board(game.board), args.ui.draw()]
     |> args.out.()
 
     :drawn
   end
 
-  defp next(:won, args) do
-    mark = Players.current_mark(args.players)
+  defp next(:won, %Args{game: game} = args) do
+    mark = Players.current_mark(game.players)
 
-    [args.ui.draw_board(args.board), args.ui.winner(mark)]
+    [args.ui.draw_board(game.board), args.ui.winner(mark)]
     |> args.out.()
 
     :won
