@@ -14,7 +14,8 @@ defmodule TicTacToeTest do
       board_manager: Board,
       ui: UI,
       io: TicTacToe.Io,
-      out: nil,
+      in: fn -> TicTacToe.Io.get_position(device) end,
+      out: fn message -> TicTacToe.Io.output(device, message) end,
       device: device,
       players:
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
@@ -32,7 +33,8 @@ defmodule TicTacToeTest do
       board_manager: Board,
       ui: UI,
       io: TicTacToe.Io,
-      out: nil,
+      in: fn -> TicTacToe.Io.get_position(device) end,
+      out: fn message -> TicTacToe.Io.output(device, message) end,
       device: device,
       players:
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
@@ -50,7 +52,8 @@ defmodule TicTacToeTest do
       board_manager: Board,
       ui: UI,
       io: TicTacToe.Io,
-      out: nil,
+      in: fn -> TicTacToe.Io.get_position(device) end,
+      out: fn message -> TicTacToe.Io.output(device, message) end,
       device: device,
       players:
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))

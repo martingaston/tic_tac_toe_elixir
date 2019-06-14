@@ -6,12 +6,10 @@ defmodule TicTacToe do
   """
 
   def start(args) do
-    out = fn message -> args.io.output(args.device, message) end
-
     [args.ui.message(:title), args.ui.message(:intro)]
-    |> out.()
+    |> args.out.()
 
-    next(:active, %{args | out: out})
+    next(:active, args)
   end
 
   defp next(:active, args) do

@@ -4,7 +4,7 @@ defmodule PlayerHuman do
   def move(args, message \\ "") do
     args.out.(message)
 
-    args.io.get_position(args.device)
+    args.in.()
     |> valid_move?(args)
     |> case do
       {:ok, position} -> position

@@ -9,21 +9,24 @@ defmodule PlayerHumanTest do
     io: TicTacToe.Io,
     device: :stdio,
     out: nil,
+    in: nil,
     players: Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
   }
 
   test "move/4 can get a valid move from the user and return the zero-indexed integer" do
     {:ok, io} = StringIO.open("1")
+    input = fn -> TicTacToe.Io.get_position(io) end
     out = fn message -> @args.io.output(io, message) end
 
-    assert PlayerHuman.move(%Game{@args | out: out, device: io}) == 0
+    assert PlayerHuman.move(%Game{@args | in: input, out: out, device: io}) == 0
   end
 
   test "move/4 will prompt again if user does not submit valid move" do
     {:ok, io} = StringIO.open("cat\n1")
+    input = fn -> TicTacToe.Io.get_position(io) end
     out = fn message -> @args.io.output(io, message) end
 
-    assert PlayerHuman.move(%Game{@args | out: out, device: io}) == 0
+    assert PlayerHuman.move(%Game{@args | in: input, out: out, device: io}) == 0
   end
 
   test "valid_move?/3 returns :ok when placing valid move on an empty board" do
