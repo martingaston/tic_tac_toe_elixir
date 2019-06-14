@@ -24,5 +24,5 @@ defmodule TicTacToe.Players do
 end
 
 defprotocol Player do
-  def best_move(player, board)
+  def choose_move(player, board)
 end
