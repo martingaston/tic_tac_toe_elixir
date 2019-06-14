@@ -45,7 +45,7 @@ defmodule TicTacToe do
   end
 
   defp next(:won, args) do
-    {_, mark} = List.first(args.players)
+    mark = Players.current_mark(args.players)
 
     [args.ui.draw_board(args.board), args.ui.winner(mark)]
     |> args.out.()
