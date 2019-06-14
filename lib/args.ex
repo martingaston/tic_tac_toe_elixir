@@ -12,6 +12,13 @@ defmodule GameState do
     }
   end
 
+  def new(board, player_mode) do
+    %GameState{
+      board: board,
+      players: Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode))
+    }
+  end
+
   def update_board(game, new_board) do
     %GameState{game | board: new_board}
   end

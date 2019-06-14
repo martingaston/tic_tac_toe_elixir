@@ -1,9 +1,9 @@
 defmodule PlayerMinimax do
   alias TicTacToe.Players, as: Players
 
-  def move(%Args{game: game} = args, _message \\ "") do
+  def move(%GameState{} = game, _message \\ "") do
     Minimax.new(
-      args,
+      game,
       Players.current_mark(game.players),
       Players.opponent_mark(game.players)
     )
