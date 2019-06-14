@@ -1,4 +1,4 @@
 defmodule Game do
-  @enforce_keys [:board, :board_manager, :ui, :io, :out, :device, :players]
-  defstruct [:board_manager, :board, :ui, :io, :in, :out, :device, :players]
+  @enforce_keys [:board, :board_manager, :ui, :out, :in, :players]
+  defstruct [:board_manager, :board, :ui, :in, :out, :players]
 end

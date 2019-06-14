@@ -12,8 +12,6 @@ defmodule TicTacToe.CLI do
       board_manager: Board,
       board: Board.new(),
       ui: UI,
-      io: TicTacToe.Io,
-      device: @device,
       in: fn -> TicTacToe.Io.get_position(@device) end,
       out: fn message -> TicTacToe.Io.output(@device, message) end,
       players:
