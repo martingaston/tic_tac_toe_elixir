@@ -4,15 +4,9 @@ defmodule TicTacToe.CLI do
 
   ./tic_tac_toe
   """
-
+  @device :stdio
   def main(_) do
-    args = %{
-      board: Board,
-      ui: UI,
-      io: TicTacToe.Io,
-      players: TicTacToe.Players.create(:human_vs_human)
-    }
-
+    args = Args.new(:human_vs_human, @device)
     TicTacToe.start(args)
   end
 end
