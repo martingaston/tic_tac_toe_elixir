@@ -3,12 +3,11 @@ defmodule Minimax do
   @losing_score -10
   @draw_score 0
 
-  defstruct [:board, :status, :players]
+  defstruct [:board, :players]
 
   def new(%GameState{} = game, maximising_player_mark, minimising_player_mark) do
     %Minimax{
       board: game.board,
-      status: Board.status(game.board),
       players: %{
         maximising_player: maximising_player_mark,
         minimising_player: minimising_player_mark
@@ -17,7 +16,7 @@ defmodule Minimax do
   end
 
   def best_position(args) do
-    case args.status do
+    case Board.status(args.board) do
       :active -> minimax(args, :active, :maximising_player).position
       _ -> :error
     end
@@ -61,13 +60,11 @@ defmodule Minimax do
   defp mark(%{players: %{maximising_player: mark}}, :minimising_player), do: mark
 
   defp update_move(args, position, next_player),
-    do: args |> update_board(position, next_player) |> update_status()
+    do: args |> update_board(position, next_player)
 
   defp update_board(args, position, next_player),
     do: %{args | board: Board.update(args.board, position, mark(args, next_player))}
 
-  defp update_status(args), do: %{args | status: Board.status(args.board)}
-
   defp score_position(args, position, next_player),
-    do: %{position: position, score: minimax(args, args.status, next_player).score}
+    do: %{position: position, score: minimax(args, Board.status(args.board), next_player).score}
 end
