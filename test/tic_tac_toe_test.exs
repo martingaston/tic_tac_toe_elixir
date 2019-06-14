@@ -20,7 +20,7 @@ defmodule TicTacToeTest do
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
     }
 
-    assert TicTacToe.start(args) == :ok
+    assert TicTacToe.start(args) == :won
   end
 
   test "game ends if player nought wins" do
@@ -38,7 +38,7 @@ defmodule TicTacToeTest do
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
     }
 
-    assert TicTacToe.start(args) == :ok
+    assert TicTacToe.start(args) == :won
   end
 
   test "game ends on draw" do
@@ -56,6 +56,6 @@ defmodule TicTacToeTest do
         Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
     }
 
-    assert TicTacToe.start(args) == :ok
+    assert TicTacToe.start(args) == :drawn
   end
 end

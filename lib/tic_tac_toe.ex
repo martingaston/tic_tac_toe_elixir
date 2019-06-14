@@ -1,4 +1,6 @@
 defmodule TicTacToe do
+  alias TicTacToe.Players, as: Players
+
   @moduledoc """
   Documentation for TicTacToe.
   """
@@ -9,42 +11,47 @@ defmodule TicTacToe do
     [args.ui.message(:title), args.ui.message(:intro)]
     |> out.()
 
-    tick(:active, %{args | out: out})
+    next(:active, %{args | out: out})
   end
 
-  defp tick(:active, args) do
-    {current_mark, current_player} = List.first(args.players)
-    {opponent_mark, _} = List.last(args.players)
-
-    [args.ui.draw_board(args.board), args.ui.player_turn(current_mark)]
+  defp next(:active, args) do
+    [args.ui.draw_board(args.board), args.ui.player_turn(Players.current_mark(args.players))]
     |> args.out.()
 
-    pos = current_player.move(args)
+    pos = Players.current_player(args.players).move(args)
 
-    updated_board = args.board_manager.update(args.board, pos, current_mark)
+    updated_board = args.board_manager.update(args.board, pos, Players.current_mark(args.players))
 
     args.board_manager.status(updated_board)
     |> case do
       :won ->
-        tick(:won, %{args | board: updated_board})
+        next(:won, %{args | board: updated_board})
 
       :drawn ->
-        tick(:drawn, %{args | board: updated_board})
+        next(:drawn, %{args | board: updated_board})
 
       :active ->
-        tick(:active, %{args | board: updated_board, players: Enum.reverse(args.players)})
+        next(:active, %{
+          args
+          | board: updated_board,
+            players: Players.next_turn(args.players)
+        })
     end
   end
 
-  defp tick(:drawn, args) do
+  defp next(:drawn, args) do
     [args.ui.draw_board(args.board), args.ui.draw()]
     |> args.out.()
+
+    :drawn
   end
 
-  defp tick(:won, args) do
+  defp next(:won, args) do
     {_, mark} = List.first(args.players)
 
     [args.ui.draw_board(args.board), args.ui.winner(mark)]
     |> args.out.()
+
+    :won
   end
 end
