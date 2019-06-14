@@ -22,7 +22,7 @@ defmodule PlayerHuman do
   end
 
   def valid_move?(position, args) do
-    if args.board_manager.available?(args.board, position) do
+    if Board.available?(args.board, position) do
       {:ok, position}
     else
       {:error, :occupied}

@@ -24,7 +24,7 @@ defmodule PlayerHumanTest do
     args = Args.new(:human_vs_human)
     position = 2
     {mark, _} = List.first(args.players)
-    updated_args = %Args{args | board: args.board_manager.update(args.board, position, mark)}
+    updated_args = %Args{args | board: Board.update(args.board, position, mark)}
     assert PlayerHuman.valid_move?(position, updated_args) == {:error, :occupied}
   end
 

@@ -18,9 +18,9 @@ defmodule TicTacToe do
 
     pos = Players.current_player(args.players).move(args)
 
-    updated_board = args.board_manager.update(args.board, pos, Players.current_mark(args.players))
+    updated_board = Board.update(args.board, pos, Players.current_mark(args.players))
 
-    args.board_manager.status(updated_board)
+    Board.status(updated_board)
     |> case do
       :won ->
         next(:won, Args.update_board(args, updated_board))
