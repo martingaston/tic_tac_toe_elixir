@@ -4,13 +4,19 @@ defmodule TicTacToe.CLI do
 
   ./tic_tac_toe
   """
+  @player_cross "X"
+  @player_nought "O"
 
   def main(_) do
-    args = %{
-      board: Board,
+    args = %Game{
+      board_manager: Board,
+      board: Board.new(),
       ui: UI,
       io: TicTacToe.Io,
-      players: TicTacToe.Players.create(:human_vs_human)
+      device: :stdio,
+      out: nil,
+      players:
+        Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(:human_vs_human))
     }
 
     TicTacToe.start(args)
