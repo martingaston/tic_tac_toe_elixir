@@ -3,9 +3,7 @@ defmodule DisplayState do
 
   def new(io, ui, device) do
     %DisplayState{
-      io: io,
       ui: ui,
-      device: device,
       in: fn -> io.get_position(device) end,
       out: fn message -> io.output(device, message) end
     }

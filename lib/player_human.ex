@@ -12,12 +12,12 @@ defmodule PlayerHuman do
     |> valid_move?(board)
     |> case do
       {:ok, position} -> position
-      {:error, message} -> error(display, message) |> move(display)
+      {:error, message} -> error(display, message) |> move(board)
     end
   end
 
-  def error(display, message) do
-    display.out.(message)
+  def error(%DisplayState{ui: ui} = display, message) do
+    display.out.(ui.message(message))
     display
   end
 
