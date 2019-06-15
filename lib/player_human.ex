@@ -1,6 +1,12 @@
 defmodule PlayerHuman do
+  defstruct [:display, :message]
   @first_square 0
   @last_square 8
+
+  def new(%DisplayState{} = display, message \\ "") do
+    %PlayerHuman{display: display, message: message}
+  end
+
   def move(%DisplayState{} = display, board, message \\ "") do
     display.out.(message)
 
