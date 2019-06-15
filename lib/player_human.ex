@@ -3,19 +3,22 @@ defmodule PlayerHuman do
   @first_square 0
   @last_square 8
 
-  def new(%DisplayState{} = display, message \\ "") do
-    %PlayerHuman{display: display, message: message}
+  def new(%DisplayState{} = display) do
+    %PlayerHuman{display: display}
   end
 
-  def move(%DisplayState{} = display, board, message \\ "") do
-    display.out.(message)
-
+  def move(%DisplayState{} = display, board) do
     display.in.()
     |> valid_move?(board)
     |> case do
       {:ok, position} -> position
-      {:error, message} -> move(display, message)
+      {:error, message} -> error(display, message) |> move(display)
     end
+  end
+
+  def error(display, message) do
+    display.out.(message)
+    display
   end
 
   def valid_move?(position, _) when not is_integer(position) do
