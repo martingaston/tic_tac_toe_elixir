@@ -1,3 +1,17 @@
+defmodule DisplayState do
+  defstruct [:io, :device, :ui, :in, :out]
+
+  def new(io, ui, device) do
+    %DisplayState{
+      io: io,
+      ui: ui,
+      device: device,
+      in: fn -> io.get_position(device) end,
+      out: fn message -> io.output(device, message) end
+    }
+  end
+end
+
 defmodule GameState do
   @player_cross "X"
   @player_nought "O"
@@ -29,14 +43,12 @@ defmodule GameState do
 end
 
 defmodule Args do
-  defstruct [:game, :ui, :in, :out]
+  defstruct [:game, :display]
 
   def new(mode, device \\ :stdio) do
     %Args{
       game: GameState.new(mode),
-      ui: UI,
-      in: fn -> TicTacToe.Io.get_position(device) end,
-      out: fn message -> TicTacToe.Io.output(device, message) end
+      display: DisplayState.new(TicTacToe.Io, UI, device)
     }
   end
 

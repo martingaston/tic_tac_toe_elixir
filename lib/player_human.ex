@@ -1,14 +1,14 @@
 defmodule PlayerHuman do
   @first_square 0
   @last_square 8
-  def move(args, message \\ "") do
-    args.out.(message)
+  def move(%DisplayState{} = display, board, message \\ "") do
+    display.out.(message)
 
-    args.in.()
-    |> valid_move?(args.game.board)
+    display.in.()
+    |> valid_move?(board)
     |> case do
       {:ok, position} -> position
-      {:error, message} -> move(args, message)
+      {:error, message} -> move(display, message)
     end
   end
 
