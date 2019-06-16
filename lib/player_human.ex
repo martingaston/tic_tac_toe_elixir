@@ -31,12 +31,12 @@ defimpl Player, for: PlayerHuman do
     |> PlayerHuman.valid_move?(board)
     |> case do
       {:ok, position} -> position
-      {:error, message} -> error(display, message) |> choose_move(board)
+      {:error, message} -> error(player, message) |> choose_move(board)
     end
   end
 
-  defp error(%DisplayState{out: out, ui: ui} = display, message) do
-    out.(ui.message(message))
-    display
+  defp error(%PlayerHuman{display: display} = player, message) do
+    display.out.(display.ui.message(message))
+    player
   end
 end

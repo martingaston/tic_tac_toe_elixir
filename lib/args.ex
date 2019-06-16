@@ -17,24 +17,11 @@ defmodule GameState do
 
   alias TicTacToe.Players
 
-  def new(players) when is_list(players) do
+  def new(player_mode, opts) do
     %GameState{
       board: Board.new(),
-      players: players
-    }
-  end
-
-  def new(player_mode) do
-    %GameState{
-      board: Board.new(),
-      players: Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode))
-    }
-  end
-
-  def new(board, player_mode) do
-    %GameState{
-      board: board,
-      players: Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode))
+      players:
+        Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode, opts))
     }
   end
 
@@ -50,17 +37,12 @@ end
 defmodule Args do
   defstruct [:game, :display]
 
-  def new(%DisplayState{} = display, %GameState{} = game) do
-    %Args{
-      game: game,
-      display: display
-    }
-  end
-
   def new(mode, device \\ :stdio) do
+    display = DisplayState.new(TicTacToe.Io, UI, device)
+
     %Args{
-      game: GameState.new(mode),
-      display: DisplayState.new(TicTacToe.Io, UI, device)
+      game: GameState.new(mode, display),
+      display: display
     }
   end
 
