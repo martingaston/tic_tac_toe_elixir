@@ -25,4 +25,10 @@ defmodule TicTacToeTest do
     args = Args.new(:human_vs_human, device)
     assert TicTacToe.start(args) == :drawn
   end
+
+  test "minimax vs minimax ends on draw" do
+    {:ok, device} = StringIO.open("")
+    args = Args.new(:minimax_vs_minimax, device)
+    assert TicTacToe.start(args) == :drawn
+  end
 end

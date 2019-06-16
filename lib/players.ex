@@ -8,7 +8,10 @@ defmodule TicTacToe.Players do
   end
 
   def create(:human_vs_minimax), do: [PlayerHuman, PlayerMinimax]
-  def create(:minimax_vs_minimax), do: [PlayerMinimax, PlayerMinimax]
+
+  def create(:minimax_vs_minimax, _) do
+    [PlayerMinimax.new("X", "O"), PlayerMinimax.new("O", "X")]
+  end
 
   def next_turn(players) do
     Enum.reverse(players)
