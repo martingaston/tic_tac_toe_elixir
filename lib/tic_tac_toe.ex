@@ -19,7 +19,9 @@ defmodule TicTacToe do
     ]
     |> display.out.()
 
-    pos = Players.current_player(game.players).move(display, game.board)
+    pos =
+      Players.current_player(game.players)
+      |> Player.choose_move(game.board)
 
     updated_board = Board.update(game.board, pos, Players.current_mark(game.players))
 

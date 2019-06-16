@@ -17,6 +17,13 @@ defmodule GameState do
 
   alias TicTacToe.Players
 
+  def new(players) when is_list(players) do
+    %GameState{
+      board: Board.new(),
+      players: players
+    }
+  end
+
   def new(player_mode) do
     %GameState{
       board: Board.new(),
@@ -42,6 +49,13 @@ end
 
 defmodule Args do
   defstruct [:game, :display]
+
+  def new(%DisplayState{} = display, %GameState{} = game) do
+    %Args{
+      game: game,
+      display: display
+    }
+  end
 
   def new(mode, device \\ :stdio) do
     %Args{

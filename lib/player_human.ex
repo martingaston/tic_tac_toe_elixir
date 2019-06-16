@@ -1,24 +1,10 @@
 defmodule PlayerHuman do
-  defstruct [:display, :message]
   @first_square 0
   @last_square 8
+  defstruct [:display, :message]
 
   def new(%DisplayState{} = display) do
     %PlayerHuman{display: display}
-  end
-
-  def move(%DisplayState{} = display, board) do
-    display.in.()
-    |> valid_move?(board)
-    |> case do
-      {:ok, position} -> position
-      {:error, message} -> error(display, message) |> move(board)
-    end
-  end
-
-  def error(%DisplayState{ui: ui} = display, message) do
-    display.out.(ui.message(message))
-    display
   end
 
   def valid_move?(position, _) when not is_integer(position) do
@@ -36,5 +22,21 @@ defmodule PlayerHuman do
     else
       {:error, :occupied}
     end
+  end
+end
+
+defimpl Player, for: PlayerHuman do
+  def choose_move(%PlayerHuman{display: display} = player, board) do
+    display.in.()
+    |> PlayerHuman.valid_move?(board)
+    |> case do
+      {:ok, position} -> position
+      {:error, message} -> error(display, message) |> choose_move(board)
+    end
+  end
+
+  defp error(%DisplayState{out: out, ui: ui} = display, message) do
+    out.(ui.message(message))
+    display
   end
 end

@@ -1,12 +1,16 @@
 defmodule TicTacToeTest do
   use ExUnit.Case
   doctest TicTacToe
+  alias TicTacToe.Players
 
   test "game ends if player cross wins" do
     input_player_cross_win = "1\n7\n2\n8\n3"
     {:ok, device} = StringIO.open(input_player_cross_win)
 
-    args = Args.new(:human_vs_human, device)
+    display = DisplayState.new(TicTacToe.Io, UI, device)
+    players = [{"X", Players.create(:human, display)}, {"O", Players.create(:human, display)}]
+    game = GameState.new(players)
+    args = Args.new(display, game)
     assert TicTacToe.start(args) == :won
   end
 
