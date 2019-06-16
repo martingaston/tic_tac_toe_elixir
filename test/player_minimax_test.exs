@@ -1,5 +1,6 @@
 defmodule PlayerMinimaxTest do
   use ExUnit.Case
+  alias TicTacToe.Player
   @minimax PlayerMinimax.new("X", "O")
 
   test "returns :error if game is over" do

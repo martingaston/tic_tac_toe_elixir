@@ -1,6 +1,6 @@
 defmodule PlayerHumanTest do
   use ExUnit.Case
-
+alias TicTacToe.Player
   test "move/4 can get a valid move from the user and return the zero-indexed integer" do
     {:ok, io} = StringIO.open("1")
 

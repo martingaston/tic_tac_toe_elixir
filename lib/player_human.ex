@@ -25,7 +25,7 @@ defmodule PlayerHuman do
   end
 end
 
-defimpl Player, for: PlayerHuman do
+defimpl TicTacToe.Player, for: PlayerHuman do
   def choose_move(%PlayerHuman{display: display} = player, board) do
     display.in.()
     |> PlayerHuman.valid_move?(board)

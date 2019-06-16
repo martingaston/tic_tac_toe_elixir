@@ -1,5 +1,5 @@
 defmodule TicTacToe do
-  alias TicTacToe.Players, as: Players
+  alias TicTacToe.{Players, Player}
 
   @moduledoc """
   Documentation for TicTacToe.
