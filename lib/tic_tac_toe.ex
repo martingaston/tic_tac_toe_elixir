@@ -1,94 +1,56 @@
 defmodule TicTacToe do
+  alias TicTacToe.{Players, Player}
+
   @moduledoc """
   Documentation for TicTacToe.
   """
-  @player_cross "X"
-  @player_nought "O"
 
-  def start(
-        %{
-          board: board,
-          players: players,
-          ui: ui,
-          io: io
-        },
-        device \\ :stdio
-      ) do
-    out = fn message -> io.output(device, message) end
-    game_board = board.new()
-    players = Enum.zip([@player_cross, @player_nought], players)
+  def start(%Args{display: display} = args) do
+    [display.ui.message(:title), display.ui.message(:intro)]
+    |> display.out.()
 
-    [ui.message(:title), ui.message(:intro)]
-    |> out.()
-
-    tick(:active, players, %{
-      board: board,
-      game_board: game_board,
-      out: out,
-      io: io,
-      device: device,
-      ui: ui
-    })
+    next(:active, args)
   end
 
-  defp tick(:active, players, %{
-         board: board,
-         game_board: game_board,
-         ui: ui,
-         io: io,
-         device: device,
-         out: out
-       }) do
-    {current_mark, current_player} = List.first(players)
-    {opponent_mark, _} = List.last(players)
-
-    [ui.draw_board(game_board), ui.player_turn(current_mark)]
-    |> out.()
+  defp next(:active, %Args{game: game, display: display} = args) do
+    [
+      display.ui.draw_board(game.board),
+      display.ui.player_turn(Players.current_mark(game.players))
+    ]
+    |> display.out.()
 
     pos =
-      current_player.move(
-        game_board,
-        "",
-        %{board: board, player: current_mark, opponent: opponent_mark, ui: ui, io: io},
-        device
-      )
+      Players.current_player(game.players)
+      |> Player.choose_move(game.board)
 
-    updated_board = board.update(game_board, pos, current_mark)
+    updated_board = Board.update(game.board, pos, Players.current_mark(game.players))
 
-    board.status(updated_board)
+    Board.status(updated_board)
     |> case do
       :won ->
-        tick(:won, %{
-          game_board: updated_board,
-          io: io,
-          device: device,
-          ui: ui,
-          out: out,
-          mark: current_mark
-        })
+        next(:won, Args.update_board(args, updated_board))
 
       :drawn ->
-        tick(:drawn, %{game_board: updated_board, out: out, ui: ui})
+        next(:drawn, Args.update_board(args, updated_board))
 
       :active ->
-        tick(:active, Enum.reverse(players), %{
-          board: board,
-          game_board: updated_board,
-          io: io,
-          ui: ui,
-          out: out,
-          device: device
-        })
+        next(:active, Args.update_board(args, updated_board) |> Args.update_players())
     end
   end
 
-  defp tick(:drawn, %{game_board: game_board, ui: ui, out: out}) do
-    [ui.draw_board(game_board), ui.draw()]
-    |> out.()
+  defp next(:drawn, %Args{game: game, display: display}) do
+    [display.ui.draw_board(game.board), display.ui.draw()]
+    |> display.out.()
+
+    :drawn
   end
 
-  defp tick(:won, %{game_board: game_board, out: out, ui: ui, mark: mark}) do
-    [ui.draw_board(game_board), ui.winner(mark)]
-    |> out.()
+  defp next(:won, %Args{game: game, display: display}) do
+    mark = Players.current_mark(game.players)
+
+    [display.ui.draw_board(game.board), display.ui.winner(mark)]
+    |> display.out.()
+
+    :won
   end
 end

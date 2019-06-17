@@ -1,37 +1,51 @@
 defmodule PlayerHumanTest do
   use ExUnit.Case
-  @board Board.new()
-  @args %{board: Board, io: TicTacToe.Io, ui: UI, mark: "X"}
-
+alias TicTacToe.Player
   test "move/4 can get a valid move from the user and return the zero-indexed integer" do
     {:ok, io} = StringIO.open("1")
-    assert PlayerHuman.move(@board, "", @args, io) == 0
+
+    player =
+      DisplayState.new(TicTacToe.Io, UI, io)
+      |> PlayerHuman.new()
+
+    assert Player.choose_move(player, Board.new()) == 0
   end
 
   test "move/4 will prompt again if user does not submit valid move" do
     {:ok, io} = StringIO.open("cat\n1")
-    assert PlayerHuman.move(@board, "", @args, io) == 0
+
+    player =
+      DisplayState.new(TicTacToe.Io, UI, io)
+      |> PlayerHuman.new()
+
+    assert Player.choose_move(player, Board.new()) == 0
   end
 
   test "valid_move?/3 returns :ok when placing valid move on an empty board" do
     position = 1
-    board = Board.new()
-    assert PlayerHuman.valid_move?(position, board, @args) == {:ok, 1}
+    args = Args.new(:human_vs_human)
+    assert PlayerHuman.valid_move?(position, args) == {:ok, 1}
   end
 
   test "valid_move?/3 returns {:error, :occupied} if move is already taken" do
-    position = 2
-    board = Board.update(@board, position, "X")
-    assert PlayerHuman.valid_move?(position, board, @args) == {:error, :occupied}
+    position = 1
+
+    board =
+      Board.new()
+      |> Board.update(position, "x")
+
+    assert PlayerHuman.valid_move?(position, board) == {:error, :occupied}
   end
 
   test "valid_move?/3 returns {:error, :out_of_bounds} if number too big/small" do
     position = 25
-    assert PlayerHuman.valid_move?(position, @board, @args) == {:error, :out_of_bounds}
+    board = Board.new()
+    assert PlayerHuman.valid_move?(position, board) == {:error, :out_of_bounds}
   end
 
   test "valid_move?/3 returns {:error, :nan} if position is not an integer" do
+    board = Board.new()
     position = "cat"
-    assert PlayerHuman.valid_move?(position, @board, @args) == {:error, :nan}
+    assert PlayerHuman.valid_move?(position, board) == {:error, :nan}
   end
 end
