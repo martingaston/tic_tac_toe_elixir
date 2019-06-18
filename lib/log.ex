@@ -2,30 +2,16 @@ defmodule Log do
   @default_dir "log"
   @default_log "log.txt"
 
-  def out(contents, dir \\ @default_dir, log_file \\ @default_log)
-
-  def out(contents, dir, log_file) when is_list(contents) do
-    open(dir, log_file)
-    |> append(Enum.join(contents, "\n") <> "\n")
-    |> close()
-    contents
-  end
-
-  def out(contents, dir, log_file) do
+  def out(contents, dir \\ @default_dir, log_file \\ @default_log) do
     open(dir, log_file)
     |> append(contents)
     |> close()
-    contents
   end
 
   defp open(dir, log) do
-    unless File.exists?(dir), do: File.mkdir_p(dir)
-
-    Path.join([dir, log])
-    |> File.open([:read, :append, :utf8])
-    |> case do
-      {:ok, file} -> file
-      {:error, reason} -> {:error, reason}
+    with :ok <- check_directory(dir),
+         {:ok, file} <- Path.join([dir, log]) |> File.open([:read, :append, :utf8]) do
+      file
     end
   end
 
@@ -35,4 +21,8 @@ defmodule Log do
   end
 
   defp close(file), do: File.close(file)
+
+  defp check_directory(dir) do
+    unless File.exists?(dir), do: File.mkdir_p(dir), else: :ok
+  end
 end
