@@ -1,12 +1,13 @@
 defmodule PlayerMinimax do
-  alias TicTacToe.Players, as: Players
+  defstruct [:player, :opponent]
 
-  def move(args, _message \\ "") do
-    Minimax.new(
-      args,
-      Players.current_mark(args.players),
-      Players.opponent_mark(args.players)
-    )
+  def new(player_mark, opponent_mark),
+    do: %PlayerMinimax{player: player_mark, opponent: opponent_mark}
+end
+
+defimpl TicTacToe.Player, for: PlayerMinimax do
+  def choose_move(%PlayerMinimax{player: player, opponent: opponent}, board) do
+    Minimax.new(board, player, opponent)
     |> Minimax.best_position()
   end
 end

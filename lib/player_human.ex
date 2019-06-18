@@ -1,31 +1,44 @@
 defmodule PlayerHuman do
   @first_square 0
   @last_square 8
-  def move(args, message \\ "") do
-    args.out.(message)
+  defstruct [:in, :out, :ui]
 
-    args.in.()
-    |> valid_move?(args)
-    |> case do
-      {:ok, position} -> position
-      {:error, message} -> move(args, message)
-    end
+  def new(%DisplayState{in: input, out: output, ui: ui}) do
+    %PlayerHuman{in: input, out: output, ui: ui}
   end
 
-  def valid_move?(position, _args) when not is_integer(position) do
+  def valid_move?(position, _) when not is_integer(position) do
     {:error, :nan}
   end
 
-  def valid_move?(position, _args)
+  def valid_move?(position, _)
       when position < @first_square or position > @last_square do
     {:error, :out_of_bounds}
   end
 
-  def valid_move?(position, args) do
-    if args.board_manager.available?(args.board, position) do
+  def valid_move?(position, board) do
+    if Board.available?(board, position) do
       {:ok, position}
     else
       {:error, :occupied}
     end
+  end
+end
+
+defimpl TicTacToe.Player, for: PlayerHuman do
+  def choose_move(%PlayerHuman{in: input} = player, board) do
+    input.()
+    |> PlayerHuman.valid_move?(board)
+    |> case do
+      {:ok, position} -> position
+      {:error, message} -> error(player, message) |> choose_move(board)
+    end
+  end
+
+  defp error(%PlayerHuman{ui: ui, out: out} = player, message) do
+    ui.message(message)
+    |> out.()
+
+    player
   end
 end

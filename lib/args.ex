@@ -1,27 +1,20 @@
 defmodule Args do
-  alias TicTacToe.Players, as: Players
-
-  @enforce_keys [:board, :board_manager, :ui, :out, :in, :players]
-  defstruct [:board_manager, :board, :ui, :in, :out, :players]
-  @player_cross "X"
-  @player_nought "O"
+  defstruct [:game, :display]
 
   def new(mode, device \\ :stdio) do
+    display = DisplayState.new(TicTacToe.Io, UI, device)
+
     %Args{
-      board_manager: Board,
-      board: Board.new(),
-      ui: UI,
-      in: fn -> TicTacToe.Io.get_position(device) end,
-      out: fn message -> TicTacToe.Io.output(device, message) end,
-      players: Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(mode))
+      game: GameState.new(mode, display),
+      display: display
     }
   end
 
   def update_board(args, new_board) do
-    %Args{args | board: new_board}
+    %Args{args | game: GameState.update_board(args.game, new_board)}
   end
 
   def update_players(args) do
-    %Args{args | players: Players.next_turn(args.players)}
+    %Args{args | game: GameState.update_players(args.game)}
   end
 end

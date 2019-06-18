@@ -1,26 +1,31 @@
 defmodule TicTacToe do
-  alias TicTacToe.Players, as: Players
+  alias TicTacToe.{Players, Player}
 
   @moduledoc """
   Documentation for TicTacToe.
   """
 
-  def start(args) do
-    [args.ui.message(:title), args.ui.message(:intro)]
-    |> args.out.()
+  def start(%Args{display: display} = args) do
+    [display.ui.message(:title), display.ui.message(:intro)]
+    |> display.out.()
 
     next(:active, args)
   end
 
-  defp next(:active, args) do
-    [args.ui.draw_board(args.board), args.ui.player_turn(Players.current_mark(args.players))]
-    |> args.out.()
+  defp next(:active, %Args{game: game, display: display} = args) do
+    [
+      display.ui.draw_board(game.board),
+      display.ui.player_turn(Players.current_mark(game.players))
+    ]
+    |> display.out.()
 
-    pos = Players.current_player(args.players).move(args)
+    pos =
+      Players.current_player(game.players)
+      |> Player.choose_move(game.board)
 
-    updated_board = args.board_manager.update(args.board, pos, Players.current_mark(args.players))
+    updated_board = Board.update(game.board, pos, Players.current_mark(game.players))
 
-    args.board_manager.status(updated_board)
+    Board.status(updated_board)
     |> case do
       :won ->
         next(:won, Args.update_board(args, updated_board))
@@ -33,18 +38,18 @@ defmodule TicTacToe do
     end
   end
 
-  defp next(:drawn, args) do
-    [args.ui.draw_board(args.board), args.ui.draw()]
-    |> args.out.()
+  defp next(:drawn, %Args{game: game, display: display}) do
+    [display.ui.draw_board(game.board), display.ui.draw()]
+    |> display.out.()
 
     :drawn
   end
 
-  defp next(:won, args) do
-    mark = Players.current_mark(args.players)
+  defp next(:won, %Args{game: game, display: display}) do
+    mark = Players.current_mark(game.players)
 
-    [args.ui.draw_board(args.board), args.ui.winner(mark)]
-    |> args.out.()
+    [display.ui.draw_board(game.board), display.ui.winner(mark)]
+    |> display.out.()
 
     :won
   end
