@@ -6,6 +6,10 @@ defmodule Log do
     open(dir, log_file)
     |> append(contents)
     |> close()
+    |> case do
+      :ok -> contents
+      error -> error
+    end
   end
 
   defp open(dir, log) do

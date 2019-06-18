@@ -2,14 +2,10 @@ defmodule IOTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 
-  test "get_position returns a zero-indexed number" do
-    {:ok, io} = StringIO.open("1")
-    assert TicTacToe.Io.get_position(io) == 0
-  end
-
-  test "get_position repeats until valid numerical input is provided" do
-    {:ok, io} = StringIO.open("cat1\n2")
-    assert TicTacToe.Io.get_position(io) == 1
+  test "IO.input/1 gets input from the user" do
+    input_string = "to be or not to be"
+    {:ok, io} = StringIO.open(input_string)
+    assert TicTacToe.Io.input(io) == input_string
   end
 
   test "TicTacToe.Io.output/2 returns the string passed in" do
