@@ -38,7 +38,6 @@ alias TicTacToe.Player
   end
 
   test "valid_move?/3 returns {:error, :out_of_bounds} if number too big/small" do
-    args = Args.new(:human_vs_human)
     position = 25
     board = Board.new()
     assert PlayerHuman.valid_move?(position, board) == {:error, :out_of_bounds}

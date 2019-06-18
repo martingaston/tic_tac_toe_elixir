@@ -5,7 +5,7 @@ defmodule Minimax do
 
   defstruct [:board, :players]
 
-  def new(args, maximising_player_mark, minimising_player_mark) do
+  def new(board, maximising_player_mark, minimising_player_mark) do
     %Minimax{
       board: board,
       players: %{
