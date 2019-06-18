@@ -17,10 +17,11 @@ defmodule TicTacToe.Io do
   end
 
   def output(io, contents) when is_list(contents) do
-    IO.write(io, Enum.join(contents, "\n") <> "\n")
+    output(io, Enum.join(contents, "\n") <> "\n")
   end
 
   def output(io, contents) do
     IO.write(io, contents)
+    contents
   end
 end
