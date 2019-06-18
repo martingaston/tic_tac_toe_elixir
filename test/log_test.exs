@@ -2,7 +2,7 @@ defmodule LogTest do
   @test_dir "test_log"
   use ExUnit.Case
 
-  setup_all do
+  setup do
     on_exit(fn ->
       File.rm_rf(@test_dir)
     end)
@@ -15,5 +15,16 @@ defmodule LogTest do
     :ok = Log.out(test_output, @test_dir, "test_log.txt")
     {:ok, file} = File.open(Path.join(@test_dir, "test_log.txt"), [:read, :utf8])
     assert test_output == IO.read(file, :all)
+  end
+
+  test "Log.out/3 appends to a file and does not overwrite" do
+    test_output = "this is a utf8 string to test output"
+    :ok = Log.out(test_output, @test_dir, "test_log.txt")
+    :ok = Log.out("\n", @test_dir, "test_log.txt")
+    :ok = Log.out(test_output, @test_dir, "test_log.txt")
+    {:ok, file} = File.open(Path.join(@test_dir, "test_log.txt"), [:read, :utf8])
+
+    assert "this is a utf8 string to test output\nthis is a utf8 string to test output" ==
+             IO.read(file, :all)
   end
 end
