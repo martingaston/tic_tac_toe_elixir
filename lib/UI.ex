@@ -1,26 +1,42 @@
 defmodule UI do
   def draw_board(board) do
-    zero_indexed_size = Board.size(board) - 1
+    board
+    |> calculate_board_rows()
+    |> generate_rows()
+    |> generate_dividers()
+    |> generate_header_and_footer()
+    |> build()
+  end
+
+  defp calculate_board_rows(board) do
+    total = zero_indexed_board(board)
     side_length = Board.side_length(board)
 
-    calculate_board_rows(zero_indexed_size, side_length)
-    |> generate_rows(board)
-    |> generate_dividers(side_length)
-    |> add_header_and_footer(side_length)
+    %{
+      board: board,
+      total: total,
+      side_length: side_length,
+      rows: Enum.chunk_every(0..total, side_length),
+      contents: []
+    }
   end
 
-  defp calculate_board_rows(size, side_length) do
-    Enum.chunk_every(0..size, side_length)
+  defp generate_rows(%{board: board, rows: rows} = board_data) do
+    %{board_data | :contents => Enum.map(rows, &row(board, &1))}
   end
 
-  defp generate_rows(board_list, board), do: Enum.map(board_list, &row(board, &1))
-
-  defp generate_dividers(board_list, side_length) do
-    Enum.join(board_list, "\n" <> divider(side_length) <> "\n")
+  defp row(board, range) do
+    Enum.reduce(range, "", fn pos, acc -> acc <> square(board, pos) end) <> "|"
   end
 
-  defp add_header_and_footer(board_string, side_length) do
-    "#{divider(side_length)}\n#{board_string}\n#{divider(side_length)}\n"
+  defp generate_dividers(%{contents: contents, side_length: side_length} = board_data) do
+    %{
+      board_data
+      | :contents =>
+          Enum.reduce(contents, [], fn row, acc ->
+            acc ++ [row] ++ [[divider(side_length)]]
+          end)
+    }
   end
 
   defp divider(side_length) do
@@ -31,9 +47,13 @@ defmodule UI do
     "+" <> Enum.reduce(1..width, "", fn _, acc -> acc <> "-" end) <> "+"
   end
 
-  defp row(board, range) do
-    Enum.reduce(range, "", fn pos, acc -> acc <> square(board, pos) end) <> "|"
+  defp generate_header_and_footer(%{contents: contents, side_length: side_length} = board_data) do
+    %{board_data | :contents => [[divider(side_length)]] ++ contents ++ [[""]]}
   end
+
+  defp build(%{contents: contents}), do: Enum.join(contents, "\n")
+
+  defp zero_indexed_board(board), do: Board.size(board) - 1
 
   defp square(board, position) do
     square =
