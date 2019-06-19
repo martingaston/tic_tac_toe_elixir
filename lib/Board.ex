@@ -33,7 +33,7 @@ defmodule Board do
   """
   def available?(board, position) do
     case get(board, position) do
-      :error -> :error
+      :error -> false
       square -> square == @empty_square
     end
   end
@@ -51,6 +51,8 @@ defmodule Board do
       true -> :active
     end
   end
+
+  def size(board), do: map_size(board)
 
   def moves?(board) do
     board
