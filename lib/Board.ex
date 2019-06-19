@@ -77,16 +77,16 @@ defmodule Board do
   Recieves a board state and determines if any winning combinations exist
   """
   def hasWon?(board) do
-    win = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
+    win_manual = [
       [0, 4, 8],
       [2, 4, 6]
     ]
+
+    rows = Enum.chunk_every(0..size(board), side_length(board))
+
+    columns = Enum.map(0..2, fn x -> Enum.take_every(x..8, 3) end)
+  
+    win = win_manual ++ rows ++ columns
 
     Enum.any?(win, fn x ->
       values =
