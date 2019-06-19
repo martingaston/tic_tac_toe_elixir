@@ -54,6 +54,8 @@ defmodule Board do
 
   def size(board), do: map_size(board)
 
+  def side_length(board), do: size(board) |> :math.sqrt() |> round()
+
   def moves?(board) do
     board
     |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)

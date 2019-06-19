@@ -1,12 +1,16 @@
 defmodule UI do
+  def draw_board_dynamic(board) do
+    zero_indexed_size = Board.size(board) - 1
+
+    Enum.chunk_every(0..zero_indexed_size, Board.side_length(board))
+    |> Enum.map(fn x -> row(board, x) end)
+    |> Enum.join("\n" <> header() <> "\n")
+  end
+
   def draw_board(board) do
     [
       header(),
-      row(board, 0..2),
-      header(),
-      row(board, 3..5),
-      header(),
-      row(board, 6..8),
+      draw_board_dynamic(board),
       header(),
       ""
     ]
