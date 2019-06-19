@@ -7,9 +7,17 @@ defmodule Board do
   @doc """
   Return an empty board
   """
-  def new do
-    Enum.reduce(0..8, %{}, &Map.put(&2, &1, @empty_square))
+  def new(size \\ :three_by_three)
+
+  def new(:four_by_four) do
+    create_board(15)
   end
+
+  def new(:three_by_three) do
+    create_board(8)
+  end
+
+  defp create_board(total), do: Enum.reduce(0..total, %{}, &Map.put(&2, &1, @empty_square))
 
   @doc """
   Update an existing board in the specified position with a specified mark. Does not overwrite existing marks.
