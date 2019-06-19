@@ -1,22 +1,21 @@
 defmodule PlayerHuman do
   @first_square 0
-  @last_square 8
   defstruct [:in, :out, :ui]
 
   def new(%DisplayState{in: input, out: output, ui: ui}) do
     %PlayerHuman{in: input, out: output, ui: ui}
   end
 
-  def valid_move?(position, _) when not is_integer(position) do
+  def valid_move?(position, _, _) when not is_integer(position) do
     {:error, :nan}
   end
 
-  def valid_move?(position, _)
-      when position < @first_square or position > @last_square do
+  def valid_move?(position, _, size)
+      when position < @first_square or position > size do
     {:error, :out_of_bounds}
   end
 
-  def valid_move?(position, board) do
+  def valid_move?(position, board, _) do
     if Board.available?(board, position) do
       {:ok, position}
     else
@@ -28,7 +27,7 @@ end
 defimpl TicTacToe.Player, for: PlayerHuman do
   def choose_move(%PlayerHuman{in: input} = player, board) do
     input.()
-    |> PlayerHuman.valid_move?(board)
+    |> PlayerHuman.valid_move?(board, Board.size(board))
     |> case do
       {:ok, position} -> position
       {:error, message} -> error(player, message) |> choose_move(board)

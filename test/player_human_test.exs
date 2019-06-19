@@ -1,6 +1,8 @@
 defmodule PlayerHumanTest do
   use ExUnit.Case
-alias TicTacToe.Player
+  alias TicTacToe.Player
+  @board_size 9
+
   test "move/4 can get a valid move from the user and return the zero-indexed integer" do
     {:ok, io} = StringIO.open("1")
 
@@ -23,8 +25,8 @@ alias TicTacToe.Player
 
   test "valid_move?/3 returns :ok when placing valid move on an empty board" do
     position = 1
-    args = Args.new(:human_vs_human)
-    assert PlayerHuman.valid_move?(position, args) == {:ok, 1}
+    board = Board.new()
+    assert PlayerHuman.valid_move?(position, board, @board_size) == {:ok, 1}
   end
 
   test "valid_move?/3 returns {:error, :occupied} if move is already taken" do
@@ -34,18 +36,18 @@ alias TicTacToe.Player
       Board.new()
       |> Board.update(position, "x")
 
-    assert PlayerHuman.valid_move?(position, board) == {:error, :occupied}
+    assert PlayerHuman.valid_move?(position, board, @board_size) == {:error, :occupied}
   end
 
   test "valid_move?/3 returns {:error, :out_of_bounds} if number too big/small" do
     position = 25
     board = Board.new()
-    assert PlayerHuman.valid_move?(position, board) == {:error, :out_of_bounds}
+    assert PlayerHuman.valid_move?(position, board, @board_size) == {:error, :out_of_bounds}
   end
 
   test "valid_move?/3 returns {:error, :nan} if position is not an integer" do
     board = Board.new()
     position = "cat"
-    assert PlayerHuman.valid_move?(position, board) == {:error, :nan}
+    assert PlayerHuman.valid_move?(position, board, @board_size) == {:error, :nan}
   end
 end
