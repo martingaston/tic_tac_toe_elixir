@@ -82,25 +82,28 @@ defmodule Board do
   @doc """
   Recieves a board state and determines if any winning combinations exist
   """
-  def hasWon?(%Board{contents: contents, winning_moves: winning_moves}) do
+  def hasWon?(%Board{contents: contents, winning_moves: winning_moves} = board) do
     Enum.any?(winning_moves, fn x ->
       values =
         Map.take(contents, x)
         |> Map.values()
 
-      Enum.count(values) == 3 && hd(values) != @empty_square &&
+      Enum.count(values) == side_length(board) && hd(values) != @empty_square &&
         Enum.all?(values, &(&1 == hd(values)))
     end)
   end
 
   defp winning_moves(size) do
-    rows = Enum.chunk_every(0..size, :math.sqrt(size + 1) |> round())
+    side_length = :math.sqrt(size + 1) |> round()
 
-    columns = Enum.map(0..2, fn x -> Enum.take_every(x..8, 3) end)
+    rows = Enum.chunk_every(0..size, side_length)
+
+    columns = Enum.map(0..(side_length - 1), fn x -> Enum.take_every(x..size, side_length) end)
 
     left_diagonal = Enum.reduce(rows, [], fn x, acc -> acc ++ [Enum.at(x, length(acc))] end)
 
-    right_diagonal = Enum.reduce(rows, [], fn x, acc -> acc ++ [Enum.at(x, 2 - length(acc))] end)
+    right_diagonal =
+      Enum.reduce(rows, [], fn x, acc -> acc ++ [Enum.at(x, side_length - 1 - length(acc))] end)
 
     rows ++ columns ++ [left_diagonal, right_diagonal]
   end

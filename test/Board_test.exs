@@ -166,4 +166,43 @@ defmodule BoardTest do
 
     assert Board.hasWon?(board) == true
   end
+
+  test "hasWon returns true if player has won with top row on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(0, player)
+      |> Board.update(1, player)
+      |> Board.update(2, player)
+      |> Board.update(3, player)
+
+    assert Board.hasWon?(board) == true
+  end
+
+  test "hasWon returns true if player has won with right column on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(3, player)
+      |> Board.update(7, player)
+      |> Board.update(11, player)
+      |> Board.update(15, player)
+
+    assert Board.hasWon?(board) == true
+  end
+
+  test "hasWon returns true if player has won with diagonal on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(0, player)
+      |> Board.update(5, player)
+      |> Board.update(10, player)
+      |> Board.update(15, player)
+
+    assert Board.hasWon?(board) == true
+  end
 end
