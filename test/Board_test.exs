@@ -7,6 +7,26 @@ defmodule BoardTest do
     assert Board.moves?(board) == 9
   end
 
+  test "size/1 returns 9 for a default 3x3 board" do
+    board = Board.new()
+    assert Board.size(board) == 9
+  end
+
+  test "size/1 returns 16 for a 4x4 board" do
+    board = Board.new(:four_by_four)
+    assert Board.size(board) == 16
+  end
+
+  test "side_length/1 returns 3 for a default 3x3 board" do
+    board = Board.new()
+    assert Board.side_length(board) == 3
+  end
+
+  test "side_length/1 returns 4 for a 4x4 board" do
+    board = Board.new(:four_by_four)
+    assert Board.side_length(board) == 4
+  end
+
   test "update/3 adds a symbol to the board" do
     board = Board.new()
     pos = 0
