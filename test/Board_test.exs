@@ -3,7 +3,8 @@ defmodule BoardTest do
   doctest Board
 
   test "new/0 returns an empty board" do
-    assert Enum.all?(Board.new(), fn {_k, occupant} -> occupant == "" end)
+    board = Board.new()
+    assert Board.moves?(board) == 9
   end
 
   test "update/3 adds a symbol to the board" do
@@ -11,7 +12,7 @@ defmodule BoardTest do
     pos = 0
     player = "X"
     result = Board.update(board, pos, player)
-    assert Map.fetch(result, 0) == {:ok, "X"}
+    assert Board.get(result, 0) == "X"
   end
 
   test "update/3 does not overwrite occupied squares" do
@@ -21,7 +22,7 @@ defmodule BoardTest do
     first_move = Board.update(board, pos, first_player)
     second_player = "O"
     second_move = Board.update(first_move, pos, second_player)
-    assert Map.fetch(second_move, 0) == {:ok, "X"}
+    assert Board.get(second_move, 0) == "X"
   end
 
   test "update/3 does not change the board if the requested update position is out of bounds" do

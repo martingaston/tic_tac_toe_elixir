@@ -1,5 +1,5 @@
 defmodule UI do
-  def draw_board(board) do
+  def draw_board(%Board{} = board) do
     board
     |> calculate_board_rows()
     |> generate_rows()

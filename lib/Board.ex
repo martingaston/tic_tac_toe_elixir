@@ -4,6 +4,8 @@ defmodule Board do
   Contains functions to determine board management - creation, updating and determining if a player has filled a row, column or diagonal
   """
 
+  defstruct [:contents, :winning_moves]
+
   @doc """
   Return an empty board
   """
@@ -17,20 +19,25 @@ defmodule Board do
     create_board(8)
   end
 
-  defp create_board(total), do: Enum.reduce(0..total, %{}, &Map.put(&2, &1, @empty_square))
+  defp create_board(total) do
+    %Board{
+      contents: Enum.reduce(0..total, %{}, &Map.put(&2, &1, @empty_square)),
+      winning_moves: winning_moves(total)
+    }
+  end
 
   @doc """
   Update an existing board in the specified position with a specified mark. Does not overwrite existing marks.
   """
-  def update(board, pos, mark) do
+  def update(%Board{} = board, pos, mark) do
     case get(board, pos) do
-      @empty_square -> Map.put(board, pos, mark)
+      @empty_square -> %Board{board | contents: Map.put(board.contents, pos, mark)}
       _ -> board
     end
   end
 
-  def get(board, pos) do
-    case Map.fetch(board, pos) do
+  def get(%Board{contents: contents}, pos) do
+    case Map.fetch(contents, pos) do
       {:ok, square} -> square
       _ -> :error
     end
@@ -46,13 +53,13 @@ defmodule Board do
     end
   end
 
-  def available_positions(board) do
-    board
+  def available_positions(%Board{contents: contents}) do
+    contents
     |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
     |> Enum.map(fn {position, _} -> position end)
   end
 
-  def status(board) do
+  def status(%Board{} = board) do
     cond do
       moves?(board) == :no_moves -> :drawn
       hasWon?(board) -> :won
@@ -60,13 +67,12 @@ defmodule Board do
     end
   end
 
-  def size(board), do: map_size(board)
+  def size(%Board{contents: contents}), do: map_size(contents)
 
-  def side_length(board), do: size(board) |> :math.sqrt() |> round()
+  def side_length(%Board{} = board), do: size(board) |> :math.sqrt() |> round()
 
   def moves?(board) do
-    board
-    |> Enum.filter(fn {_, occupant} -> occupant == @empty_square end)
+    available_positions(board)
     |> case do
       [] -> :no_moves
       moves -> Enum.count(moves)
@@ -76,8 +82,19 @@ defmodule Board do
   @doc """
   Recieves a board state and determines if any winning combinations exist
   """
-  def hasWon?(board) do
-    rows = Enum.chunk_every(0..(size(board) - 1), side_length(board))
+  def hasWon?(%Board{contents: contents, winning_moves: winning_moves}) do
+    Enum.any?(winning_moves, fn x ->
+      values =
+        Map.take(contents, x)
+        |> Map.values()
+
+      Enum.count(values) == 3 && hd(values) != @empty_square &&
+        Enum.all?(values, &(&1 == hd(values)))
+    end)
+  end
+
+  defp winning_moves(size) do
+    rows = Enum.chunk_every(0..size, :math.sqrt(size + 1) |> round())
 
     columns = Enum.map(0..2, fn x -> Enum.take_every(x..8, 3) end)
 
@@ -85,15 +102,6 @@ defmodule Board do
 
     right_diagonal = Enum.reduce(rows, [], fn x, acc -> acc ++ [Enum.at(x, 2 - length(acc))] end)
 
-    win = rows ++ columns ++ [left_diagonal, right_diagonal]
-
-    Enum.any?(win, fn x ->
-      values =
-        Map.take(board, x)
-        |> Map.values()
-
-      Enum.count(values) == 3 && hd(values) != @empty_square &&
-        Enum.all?(values, &(&1 == hd(values)))
-    end)
+    rows ++ columns ++ [left_diagonal, right_diagonal]
   end
 end
