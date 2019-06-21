@@ -28,6 +28,7 @@ end
 defimpl TicTacToe.Player, for: PlayerHuman do
   def choose_move(%PlayerHuman{in: input} = player, board) do
     input.()
+    |> coerce_int()
     |> PlayerHuman.valid_move?(board)
     |> case do
       {:ok, position} -> position
@@ -40,5 +41,16 @@ defimpl TicTacToe.Player, for: PlayerHuman do
     |> out.()
 
     player
+  end
+
+  defp zero_index(int), do: int - 1
+
+  defp coerce_int(string) do
+    string
+    |> Integer.parse()
+    |> case do
+      {int, _} -> int |> zero_index()
+      _ -> string
+    end
   end
 end

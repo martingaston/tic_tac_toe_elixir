@@ -28,3 +28,5 @@ tic_tac_toe_elixir-*.tar
 # Compiled escript
 tic_tac_toe
 
+# Default logging directory
+/log/
