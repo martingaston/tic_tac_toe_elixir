@@ -75,6 +75,12 @@ defmodule Ui do
       :title ->
         "TIC TAC TOE"
 
+      :choose_mode ->
+        "Select your mode:\n1. HUMAN vs HUMAN\n2. HUMAN vs ALGORITHM\n3. ALGORITHM vs ALGORITHM\n"
+
+      :choose_board ->
+        "Select your board size:\n1. THREE by THREE\n2. FOUR by FOUR\n"
+
       :intro ->
         "Turn friends into enemies by succeeding in placing a complete line in any horizontal, vertical or diagonal direction"
 

@@ -1,6 +1,13 @@
 defmodule Args do
   defstruct [:game, :display]
 
+  def new_from_state(%GameState{} = game, %DisplayState{} = display) do
+    %Args{
+      game: game,
+      display: display
+    }
+  end
+
   def new(mode, device \\ :stdio) do
     display = DisplayState.new(TicTacToe.Io, Ui, device)
 

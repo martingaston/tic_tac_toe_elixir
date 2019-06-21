@@ -1,5 +1,5 @@
 defmodule DisplayState do
-  defstruct [:io, :device, :ui, :in, :out]
+  defstruct [:ui, :in, :out]
 
   def new(io, ui, device) do
     %DisplayState{
