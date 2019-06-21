@@ -29,15 +29,15 @@ defmodule Board do
   @doc """
   Update an existing board in the specified position with a specified mark. Does not overwrite existing marks.
   """
-  def update(%Board{} = board, pos, mark) do
-    case get(board, pos) do
-      @empty_square -> %Board{board | contents: Map.put(board.contents, pos, mark)}
+  def update(%Board{} = board, position, mark) do
+    case get(board, position) do
+      @empty_square -> %Board{board | contents: Map.put(board.contents, position, mark)}
       _ -> board
     end
   end
 
-  def get(%Board{contents: contents}, pos) do
-    case Map.fetch(contents, pos) do
+  def get(%Board{contents: contents}, position) do
+    case Map.fetch(contents, position) do
       {:ok, square} -> square
       _ -> :error
     end
@@ -88,8 +88,8 @@ defmodule Board do
         Map.take(contents, x)
         |> Map.values()
 
-      Enum.count(values) == side_length(board) && hd(values) != @empty_square &&
-        Enum.all?(values, &(&1 == hd(values)))
+      Enum.count(values) == side_length(board) && List.first(values) != @empty_square &&
+        Enum.all?(values, &(&1 == List.first(values)))
     end)
   end
 
@@ -105,6 +105,7 @@ defmodule Board do
     right_diagonal =
       Enum.reduce(rows, [], fn x, acc -> acc ++ [Enum.at(x, side_length - 1 - length(acc))] end)
 
+    # generate_rows() ++ generate_columns() ++ generate_diagonals()
     rows ++ columns ++ [left_diagonal, right_diagonal]
   end
 end

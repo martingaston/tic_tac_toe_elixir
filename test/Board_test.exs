@@ -2,17 +2,17 @@ defmodule BoardTest do
   use ExUnit.Case
   doctest Board
 
-  test "new/0 returns an empty board" do
+  test "new/0 returns an empty 3x3 board with nine possible moves" do
     board = Board.new()
     assert Board.moves?(board) == 9
   end
 
-  test "size/1 returns 9 for a default 3x3 board" do
-    board = Board.new()
+  test "a 3x3 board has nine squares total" do
+    board = Board.new(:three_by_three)
     assert Board.size(board) == 9
   end
 
-  test "size/1 returns 16 for a 4x4 board" do
+  test "a 4x4 board as 16 squares total" do
     board = Board.new(:four_by_four)
     assert Board.size(board) == 16
   end
