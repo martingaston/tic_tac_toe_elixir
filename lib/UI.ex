@@ -1,4 +1,4 @@
-defmodule UI do
+defmodule Ui do
   def draw_board(%Board{} = board) do
     board
     |> calculate_board_rows()
