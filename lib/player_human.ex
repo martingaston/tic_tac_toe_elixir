@@ -28,7 +28,7 @@ defimpl TicTacToe.Player, for: PlayerHuman do
   def choose_move(%PlayerHuman{in: input} = player, board) do
     input.()
     |> coerce_int()
-    |> PlayerHuman.valid_move?(board)
+    |> PlayerHuman.valid_move?(board, Board.size(board))
     |> case do
       {:ok, position} -> position
       {:error, message} -> error(player, message) |> choose_move(board)
