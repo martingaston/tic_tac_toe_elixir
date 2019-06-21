@@ -6,7 +6,7 @@ defmodule TicTacToe.CLI do
   """
   @device :stdio
   def main(_) do
-    display = DisplayState.new(TicTacToe.Io, UI, @device)
+    display = DisplayState.new(TicTacToe.Io, Ui, @device)
     {mode, board_size} = setup(display)
     game = GameState.new(mode, board_size, display)
     args = Args.new_from_state(game, display)
