@@ -7,6 +7,10 @@ defmodule TicTacToe.Players do
     [PlayerHuman.new(display), PlayerHuman.new(display)]
   end
 
+  def create(:human_vs_minimax, %DisplayState{} = display) do
+    [PlayerHuman.new(display), PlayerMinimax.new("O", "X")]
+  end
+
   def create(:minimax_vs_minimax, _) do
     [PlayerMinimax.new("X", "O"), PlayerMinimax.new("O", "X")]
   end
