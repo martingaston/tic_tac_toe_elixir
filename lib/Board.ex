@@ -1,8 +1,10 @@
 defmodule Board do
-  @empty_square ""
   @moduledoc """
   Contains functions to determine board management - creation, updating and determining if a player has filled a row, column or diagonal
   """
+  @four_by_four_zero_indexed 15
+  @three_by_three_zero_indexed 8
+  @empty_square ""
 
   defstruct [:contents, :winning_moves]
 
@@ -12,11 +14,11 @@ defmodule Board do
   def new(size \\ :three_by_three)
 
   def new(:four_by_four) do
-    create_board(15)
+    create_board(@four_by_four_zero_indexed)
   end
 
   def new(:three_by_three) do
-    create_board(8)
+    create_board(@three_by_three_zero_indexed)
   end
 
   defp create_board(total) do
