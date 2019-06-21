@@ -5,11 +5,11 @@ defmodule GameState do
 
   alias TicTacToe.Players
 
-  def new(player_mode, opts) do
+  def new(player_mode, board_size \\ :three_by_three, display) do
     %GameState{
-      board: Board.new(),
+      board: Board.new(board_size),
       players:
-        Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode, opts))
+        Enum.zip([@player_cross, @player_nought], TicTacToe.Players.create(player_mode, display))
     }
   end
 
@@ -21,4 +21,3 @@ defmodule GameState do
     %GameState{game | players: Players.next_turn(game.players)}
   end
 end
-
