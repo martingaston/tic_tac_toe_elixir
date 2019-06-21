@@ -1,7 +1,7 @@
 defmodule Args do
   defstruct [:game, :display]
 
-  def build(%GameState{} = game, %DisplayState{} = display) do
+  def new_from_state(%GameState{} = game, %DisplayState{} = display) do
     %Args{
       game: game,
       display: display
