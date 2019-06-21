@@ -9,7 +9,7 @@ defmodule Args do
   end
 
   def new(mode, device \\ :stdio) do
-    display = DisplayState.new(TicTacToe.Io, UI, device)
+    display = DisplayState.new(TicTacToe.Io, Ui, device)
 
     %Args{
       game: GameState.new(mode, display),
