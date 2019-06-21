@@ -1,34 +1,74 @@
 defmodule UI do
-  def draw_board(board) do
-    [
-      header(),
-      row(board, 0..2),
-      header(),
-      row(board, 3..5),
-      header(),
-      row(board, 6..8),
-      header(),
-      ""
-    ]
-    |> Enum.join("\n")
+  def draw_board(%Board{} = board) do
+    board
+    |> calculate_board_rows()
+    |> generate_rows()
+    |> generate_dividers()
+    |> generate_header_and_footer()
+    |> build()
   end
 
-  defp header(), do: "+-----------+"
+  defp calculate_board_rows(board) do
+    total = zero_indexed_board(board)
+    side_length = Board.side_length(board)
 
-  defp row(board, range) do
-    Enum.reduce(range, "", fn pos, acc -> acc <> square(board, pos) end) <> "|"
+    %{
+      board: board,
+      total: total,
+      side_length: side_length,
+      rows: Enum.chunk_every(0..total, side_length),
+      contents: []
+    }
   end
 
-  defp square(board, position) do
+  defp generate_rows(%{board: board, rows: rows, total: total} = board_data) do
+    %{board_data | :contents => Enum.map(rows, &row(board, &1, total))}
+  end
+
+  defp row(board, range, total) do
+    Enum.reduce(range, "", fn pos, acc -> acc <> square(board, pos, total) end) <> "|"
+  end
+
+  defp square(board, position, total) do
     square =
       Board.get(board, position)
       |> case do
-        "" -> humanise(position) |> fade()
-        mark -> mark
+        "" -> humanise(position) |> pad("0", total) |> fade()
+        mark -> mark |> pad(" ", total)
       end
 
     "| #{square} "
   end
+
+  defp pad(string, padding, total) when total > 9, do: String.pad_leading(string, 2, padding)
+  defp pad(string, _, _), do: string
+
+  defp generate_dividers(%{contents: contents, side_length: side_length} = board_data) do
+    %{
+      board_data
+      | :contents =>
+          Enum.reduce(contents, [], fn row, acc ->
+            acc ++ [row] ++ [divider(side_length)]
+          end)
+    }
+  end
+
+  defp divider(side_length) do
+    square_width = if side_length > 3, do: 5, else: 4
+
+    final_border_width = 1
+    edges_total = 2
+    width = square_width * side_length + final_border_width - edges_total
+    ["+" <> Enum.reduce(1..width, "", fn _, acc -> acc <> "-" end) <> "+"]
+  end
+
+  defp generate_header_and_footer(%{contents: contents, side_length: side_length} = board_data) do
+    %{board_data | :contents => [divider(side_length)] ++ contents ++ [[""]]}
+  end
+
+  defp build(%{contents: contents}), do: Enum.join(contents, "\n")
+
+  defp zero_indexed_board(board), do: Board.size(board) - 1
 
   def message(key) do
     case key do

@@ -2,8 +2,29 @@ defmodule BoardTest do
   use ExUnit.Case
   doctest Board
 
-  test "new/0 returns an empty board" do
-    assert Enum.all?(Board.new(), fn {_k, occupant} -> occupant == "" end)
+  test "new/0 returns an empty 3x3 board with nine possible moves" do
+    board = Board.new()
+    assert Board.moves?(board) == 9
+  end
+
+  test "a 3x3 board has nine squares total" do
+    board = Board.new(:three_by_three)
+    assert Board.size(board) == 9
+  end
+
+  test "a 4x4 board as 16 squares total" do
+    board = Board.new(:four_by_four)
+    assert Board.size(board) == 16
+  end
+
+  test "side_length/1 returns 3 for a default 3x3 board" do
+    board = Board.new()
+    assert Board.side_length(board) == 3
+  end
+
+  test "side_length/1 returns 4 for a 4x4 board" do
+    board = Board.new(:four_by_four)
+    assert Board.side_length(board) == 4
   end
 
   test "update/3 adds a symbol to the board" do
@@ -11,7 +32,7 @@ defmodule BoardTest do
     pos = 0
     player = "X"
     result = Board.update(board, pos, player)
-    assert Map.fetch(result, 0) == {:ok, "X"}
+    assert Board.get(result, 0) == "X"
   end
 
   test "update/3 does not overwrite occupied squares" do
@@ -21,7 +42,7 @@ defmodule BoardTest do
     first_move = Board.update(board, pos, first_player)
     second_player = "O"
     second_move = Board.update(first_move, pos, second_player)
-    assert Map.fetch(second_move, 0) == {:ok, "X"}
+    assert Board.get(second_move, 0) == "X"
   end
 
   test "update/3 does not change the board if the requested update position is out of bounds" do
@@ -142,6 +163,45 @@ defmodule BoardTest do
       |> Board.update(2, player)
       |> Board.update(4, player)
       |> Board.update(6, player)
+
+    assert Board.hasWon?(board) == true
+  end
+
+  test "hasWon returns true if player has won with top row on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(0, player)
+      |> Board.update(1, player)
+      |> Board.update(2, player)
+      |> Board.update(3, player)
+
+    assert Board.hasWon?(board) == true
+  end
+
+  test "hasWon returns true if player has won with right column on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(3, player)
+      |> Board.update(7, player)
+      |> Board.update(11, player)
+      |> Board.update(15, player)
+
+    assert Board.hasWon?(board) == true
+  end
+
+  test "hasWon returns true if player has won with diagonal on 4x4 board" do
+    player = "X"
+
+    board =
+      Board.new(:four_by_four)
+      |> Board.update(0, player)
+      |> Board.update(5, player)
+      |> Board.update(10, player)
+      |> Board.update(15, player)
 
     assert Board.hasWon?(board) == true
   end
