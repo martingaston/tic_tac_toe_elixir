@@ -7,7 +7,7 @@ defmodule PlayerHumanTest do
     {:ok, io} = StringIO.open("1")
 
     player =
-      DisplayState.new(TicTacToe.Io, UI, io)
+      DisplayState.new(TicTacToe.Io, Ui, io)
       |> PlayerHuman.new()
 
     assert Player.choose_move(player, Board.new()) == 0
@@ -17,7 +17,7 @@ defmodule PlayerHumanTest do
     {:ok, io} = StringIO.open("cat\n1")
 
     player =
-      DisplayState.new(TicTacToe.Io, UI, io)
+      DisplayState.new(TicTacToe.Io, Ui, io)
       |> PlayerHuman.new()
 
     assert Player.choose_move(player, Board.new()) == 0
